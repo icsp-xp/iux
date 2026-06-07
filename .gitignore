@@ -52,3 +52,8 @@ app.*.map.json
 *.g.dart
 *.gr.dart
 *.gen.dart
+
+# mason
+.mason/
+# The used bricks are project-specific, so running `cd mason && fvm_mason get` will regenerate the file
+mason-lock.json

@@ -5,6 +5,8 @@ import 'package:iux/ui/core/theme/theme.dart';
 import 'package:iux/ui/core/theme/theme_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final router = IuxRouter();
   const theme = IuxTheme();
 
@@ -23,9 +25,15 @@ class IuxApp extends StatelessWidget {
 
     return ThemeProvider(
       themeData: theme.getThemeFromBrightness(systemBrightness),
-      child: WidgetsApp.router(
-        color: const Color.fromARGB(1, 0, 0, 0),
-        routerConfig: router.config(),
+      child: Builder(
+        builder: (context) {
+          final primaryColor = ThemeProvider.of(context).colorScheme.primary;
+
+          return WidgetsApp.router(
+            color: primaryColor,
+            routerConfig: router.config(),
+          );
+        },
       ),
     );
   }

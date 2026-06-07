@@ -5,6 +5,11 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.gr.dart"
     - "build/**"
+    - "mason/**"
+
+bloc:
+  rules:
+    - avoid_flutter_imports
 
 linter:
   rules:
