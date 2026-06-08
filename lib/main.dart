@@ -1,19 +1,31 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:iux/routing/router.dart';
+import 'package:iux/ui/core/theme/iux_theme.dart';
+import 'package:iux/ui/core/theme/theme.dart';
+import 'package:iux/ui/core/theme/theme_provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  final router = IuxRouter();
+  const theme = IuxTheme();
+
+  runApp(IuxApp(router: router, theme: theme));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class IuxApp extends StatelessWidget {
+  final IuxRouter router;
+  final Theme theme;
+
+  const IuxApp({required this.theme, required this.router, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    final systemBrightness = MediaQuery.of(context).platformBrightness;
+
+    return ThemeProvider(
+      themeData: theme.getThemeFromBrightness(systemBrightness),
+      child: WidgetsApp.router(
+        color: const Color.fromARGB(1, 0, 0, 0),
+        routerConfig: router.config(),
       ),
     );
   }

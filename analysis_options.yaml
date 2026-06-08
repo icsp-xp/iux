@@ -1,1 +1,19 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.gr.dart"
+    - "build/**"
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    unnecessary_const: true
+    avoid_empty_else: true
+    avoid_slow_async_io: true
+    always_put_required_named_parameters_first: true
+    avoid_bool_literals_in_conditional_expressions: true
