@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
+import 'package:iux/ui/core/ui/button/button.dart';
 import 'package:iux/ui/core/ui/scaffold.dart';
 
 @RoutePage()
@@ -9,7 +10,10 @@ class ProjectsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      header: Container(color: Color.fromARGB(255, 255, 255, 255), height: 32.0,),
+      header: Container(
+        color: Color.fromARGB(255, 255, 255, 255),
+        height: 32.0,
+      ),
       leftBar: Container(color: Color.fromARGB(255, 0, 0, 0)),
       leftBarWidth: 100.0,
       rightBar: Container(color: Color.fromARGB(255, 255, 0, 0)),
@@ -24,7 +28,18 @@ class ProjectsPage extends StatelessWidget {
             spacing: 8.0,
             children: [
               Expanded(child: Text('Projects')), // TODO: localize
-              Text('Add Project'), // TODO: localize
+              Button.primary(
+                child: Text('Add Project'),
+                onPressed: () {},
+              ), // TODO: localize
+              Button.secondary(
+                child: Text('Add Project'),
+                onPressed: () {},
+              ), // TODO: localize
+              Button.error(
+                child: Text('Add Project'),
+                onPressed: () {},
+              ), // TODO: localize
             ],
           ),
         ],

@@ -2,10 +2,10 @@ class RadiusSize {
   const RadiusSize({
     required this.small,
     required this.medium,
-    required this.large,
+    required this.big,
   });
 
-  final int small;
-  final int medium;
-  final int large;
+  final double small;
+  final double medium;
+  final double big;
 }

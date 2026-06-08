@@ -8,6 +8,7 @@ Application design system built with Flutter and custom themeable UI components
 - [Using Mason for Code Generation](#using-mason-for-code-generation)
     - [Bricks](#bricks)
         - [page](#page)
+        - [freezed_class](#freezed_class)
 - [Project Structure](#project-structure)
 
 ## Getting Started
@@ -37,7 +38,8 @@ fvm dart run mason_cli:mason "$@"
 *(make sure to make the file executable with `chmod +x fvm_mason`)* and then use `fvm_mason` directly
 
 ### Bricks
-#### page
+Brick creation should be invoked inside the `mason` folder.
+#### Brick: `page`
 Generates a complete new page, including the UI, **BLoC** state management (`freezed`), and navigation configuration (`auto_route`).\
 **Note:** Remember to register the new route in the router.
 
@@ -57,6 +59,21 @@ fvm_mason make page -o ../lib/ui
 │   ├── {{page_name.snakeCase()}}_event.dart
 │   └── {{page_name.snakeCase()}}_state.dart
 └── {{page_name.snakeCase()}}_page.dart
+```
+#### Brick: `freezed_class`
+Generates a Freezed immutable data class with built-in equality, `copyWith`, and `toString` implementations.
+
+**Usage**
+```bash
+fvm_mason make freezed_class -o <folder path>
+```
+
+**Prompts**
+- `class_name`: The name of the data class (e.g., *project data*) — naming conventions are handled automatically
+
+**Generated Structure**
+```plaintext
+{{class_name.snakeCase()}}.dart
 ```
 
 ## Project Structure

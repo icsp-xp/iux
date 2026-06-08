@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:iux/core/extension/color.dart';
+import 'package:iux/ui/core/theme/data/button_theme_data.dart';
 import 'package:iux/ui/core/theme/data/color_scheme.dart';
 import 'package:iux/ui/core/theme/data/radius_size.dart';
 import 'package:iux/ui/core/theme/data/spacing.dart';
@@ -89,142 +91,189 @@ class IuxTheme extends Theme {
   );
 
   @override
-  ColorScheme setColorScheme(Brightness brightness) {
-    return switch (brightness) {
-      Brightness.dark => _darkColorScheme,
-      Brightness.light => _lightColorScheme,
-    };
-  }
+  ColorScheme getColorScheme(final Brightness brightness) =>
+      switch (brightness) {
+        Brightness.dark => _darkColorScheme,
+        Brightness.light => _lightColorScheme,
+      };
 
   @override
-  RadiusSize setRadiusSize() =>
-      const RadiusSize(small: 6, medium: 12, large: 20);
+  RadiusSize getRadiusSize() => const RadiusSize(small: 6, medium: 12, big: 20);
 
   @override
-  Spacing setSpacing() =>
+  Spacing getSpacing() =>
       const Spacing(smaller: 8, small: 12, medium: 16, big: 24, bigger: 32);
 
   @override
-  Typography setTypography(Brightness brightness) {
-    return switch (brightness) {
-      Brightness.dark => const Typography(
-        bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-          height: 1.5,
-          color: Color(0xFFB0B9C3),
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          height: 1.5,
-          color: Color(0xFFCBD5E1),
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          height: 1.6,
-          color: Color(0xFFF8FAFC),
-        ),
-        labelSmall: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          height: 1.45,
-          color: Color(0xFF94A3B8),
-          letterSpacing: 0.5,
-        ),
-        labelMedium: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Color(0xFFCBD5E1),
-          letterSpacing: 0.5,
-        ),
-        labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Color(0xFFF8FAFC),
-          letterSpacing: 0.5,
-        ),
-        titleSmall: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          height: 1.4,
-          color: Color(0xFFF8FAFC),
-        ),
-        titleMedium: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          height: 1.4,
-          color: Color(0xFFF8FAFC),
-        ),
-        titleLarge: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.w700,
-          height: 1.3,
-          color: Color(0xFFF8FAFC),
-        ),
+  Typography getTypography(final Brightness brightness) => switch (brightness) {
+    Brightness.dark => const Typography(
+      bodySmall: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+        color: Color(0xFFB0B9C3),
       ),
-      Brightness.light => const Typography(
-        bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w400,
-          height: 1.5,
-          color: Color(0xFF6B7280),
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          height: 1.5,
-          color: Color(0xFF4B5563),
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          height: 1.6,
-          color: Color(0xFF0F172A),
-        ),
-        labelSmall: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          height: 1.45,
-          color: Color(0xFF6B7280),
-          letterSpacing: 0.5,
-        ),
-        labelMedium: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Color(0xFF374151),
-          letterSpacing: 0.5,
-        ),
-        labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          height: 1.5,
-          color: Color(0xFF0F172A),
-          letterSpacing: 0.5,
-        ),
-        titleSmall: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          height: 1.4,
-          color: Color(0xFF0F172A),
-        ),
-        titleMedium: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          height: 1.4,
-          color: Color(0xFF0F172A),
-        ),
-        titleLarge: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.w700,
-          height: 1.3,
-          color: Color(0xFF0F172A),
-        ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+        color: Color(0xFFCBD5E1),
       ),
-    };
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 1.6,
+        color: Color(0xFFF8FAFC),
+      ),
+      labelSmall: TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        height: 1.45,
+        color: Color(0xFF94A3B8),
+        letterSpacing: 0.5,
+      ),
+      labelMedium: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        height: 1.5,
+        color: Color(0xFFCBD5E1),
+        letterSpacing: 0.5,
+      ),
+      labelLarge: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        height: 1.5,
+        color: Color(0xFFF8FAFC),
+        letterSpacing: 0.5,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+        color: Color(0xFFF8FAFC),
+      ),
+      titleMedium: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+        color: Color(0xFFF8FAFC),
+      ),
+      titleLarge: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        height: 1.3,
+        color: Color(0xFFF8FAFC),
+      ),
+    ),
+    Brightness.light => const Typography(
+      bodySmall: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+        color: Color(0xFF6B7280),
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.5,
+        color: Color(0xFF4B5563),
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 1.6,
+        color: Color(0xFF0F172A),
+      ),
+      labelSmall: TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        height: 1.45,
+        color: Color(0xFF6B7280),
+        letterSpacing: 0.5,
+      ),
+      labelMedium: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        height: 1.5,
+        color: Color(0xFF374151),
+        letterSpacing: 0.5,
+      ),
+      labelLarge: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        height: 1.5,
+        color: Color(0xFF0F172A),
+        letterSpacing: 0.5,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+        color: Color(0xFF0F172A),
+      ),
+      titleMedium: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        height: 1.4,
+        color: Color(0xFF0F172A),
+      ),
+      titleLarge: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        height: 1.3,
+        color: Color(0xFF0F172A),
+      ),
+    ),
+  };
+
+  @override
+  ButtonThemeData getPrimaryButtonThemeData(final Brightness brightness) {
+    final colorScheme = getColorScheme(brightness);
+    final radiusSize = getRadiusSize();
+
+    return ButtonThemeData(
+      disabledColor: colorScheme.outline,
+      hoverColor: switch (brightness) {
+        Brightness.dark => colorScheme.primary.lighten(),
+        Brightness.light => colorScheme.primary.darken(),
+      },
+      foregroundColor: colorScheme.onPrimary,
+      backgroundColor: colorScheme.primary,
+      borderRadius: BorderRadius.circular(radiusSize.small),
+    );
+  }
+
+  @override
+  ButtonThemeData getSecondaryButtonThemeData(final Brightness brightness) {
+    final colorScheme = getColorScheme(brightness);
+    final radiusSize = getRadiusSize();
+
+    return ButtonThemeData(
+      disabledColor: colorScheme.outline,
+      hoverColor: switch (brightness) {
+        Brightness.dark => colorScheme.secondary.lighten(),
+        Brightness.light => colorScheme.secondary.darken(),
+      },
+      foregroundColor: colorScheme.onSecondary,
+      backgroundColor: colorScheme.secondary,
+      borderRadius: BorderRadius.circular(radiusSize.small),
+    );
+  }
+
+  @override
+  ButtonThemeData getErrorButtonThemeData(final Brightness brightness) {
+    final colorScheme = getColorScheme(brightness);
+    final radiusSize = getRadiusSize();
+
+    return ButtonThemeData(
+      disabledColor: colorScheme.outline,
+      hoverColor: switch (brightness) {
+        Brightness.dark => colorScheme.error.lighten(),
+        Brightness.light => colorScheme.error.darken(),
+      },
+      foregroundColor: colorScheme.onError,
+      backgroundColor: colorScheme.error,
+      borderRadius: BorderRadius.circular(radiusSize.small),
+    );
   }
 }

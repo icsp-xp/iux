@@ -1,0 +1,13 @@
+name: freezed_class
+description: Generate a Freezed class
+
+version: 0.1.0+1
+
+environment:
+  mason: ^0.1.2
+
+vars:
+  class_name:
+    type: string
+    description: Name of the freezed class
+    prompt: What is the name of the freezed class?

@@ -24,7 +24,7 @@ class IuxApp extends StatelessWidget {
     final systemBrightness = MediaQuery.of(context).platformBrightness;
 
     return ThemeProvider(
-      themeData: theme.getThemeFromBrightness(systemBrightness),
+      themeData: theme.getThemeData(systemBrightness),
       child: Builder(
         builder: (context) {
           final primaryColor = ThemeProvider.of(context).colorScheme.primary;

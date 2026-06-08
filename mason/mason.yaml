@@ -1,3 +1,5 @@
 bricks:
   page:
     path: bricks/page
+  freezed_class:
+    path: bricks/freezed_class
