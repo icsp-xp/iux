@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
+import 'package:iux/ui/core/icons/icons.dart';
 import 'package:iux/ui/core/ui/button/button.dart';
 import 'package:iux/ui/core/ui/scaffold.dart';
 
@@ -37,6 +38,7 @@ class ProjectsPage extends StatelessWidget {
                 onPressed: () {},
               ), // TODO: localize
               Button.error(
+                leading: Icon(Icons.plus),
                 child: Text('Add Project'),
                 onPressed: () {},
               ), // TODO: localize

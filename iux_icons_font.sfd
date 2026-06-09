@@ -1,0 +1,83 @@
+SplineFontDB: 3.2
+FontName: iux_icons_font
+FullName: iux_icons_font
+FamilyName: iux_icons_font
+Weight: Regular
+Copyright: 
+UComments: "2026-6-9: Created with FontForge (http://fontforge.org)"
+Version: 001.000
+ItalicAngle: 0
+UnderlinePosition: -204
+UnderlineWidth: 102
+Ascent: 1638
+Descent: 410
+InvalidEm: 0
+LayerCount: 2
+Layer: 0 0 "Back" 1
+Layer: 1 0 "Fore" 0
+XUID: [1021 734 1413825440 6386372]
+StyleMap: 0x0000
+FSType: 0
+OS2Version: 0
+OS2_WeightWidthSlopeOnly: 0
+OS2_UseTypoMetrics: 1
+CreationTime: 1780995495
+ModificationTime: 1781003799
+OS2TypoAscent: 0
+OS2TypoAOffset: 1
+OS2TypoDescent: 0
+OS2TypoDOffset: 1
+OS2TypoLinegap: 184
+OS2WinAscent: 0
+OS2WinAOffset: 1
+OS2WinDescent: 0
+OS2WinDOffset: 1
+HheadAscent: 0
+HheadAOffset: 1
+HheadDescent: 0
+HheadDOffset: 1
+MarkAttachClasses: 1
+DEI: 91125
+LangName: 1033
+Encoding: Custom
+UnicodeInterp: none
+NameList: AGL For New Fonts
+DisplaySize: -48
+AntiAlias: 1
+FitToEm: 0
+WinInfo: 0 38 13
+BeginPrivate: 0
+EndPrivate
+BeginChars: 1 1
+
+StartChar: plus
+Encoding: 0 57344 0
+Width: 2048
+Flags: WO
+HStem: 0 21G<1000.5 1047.5> 598 170<351.248 938 1109 1695.75>
+VStem: 938 171<11.5018 598 768 1354.5>
+LayerCount: 2
+Fore
+SplineSet
+1109 598 m 5
+ 1109 86 l 6
+ 1109 39 1071 0 1024 0 c 4
+ 977 0 938 39 938 86 c 6
+ 938 598 l 5
+ 426 598 l 6
+ 379 598 341 636 341 683 c 4
+ 341 730 379 768 426 768 c 6
+ 938 768 l 5
+ 938 1280 l 6
+ 938 1327 977 1366 1024 1366 c 4
+ 1071 1366 1109 1327 1109 1280 c 6
+ 1109 768 l 5
+ 1621 768 l 6
+ 1668 768 1706 730 1706 683 c 4
+ 1706 636 1668 598 1621 598 c 6
+ 1109 598 l 5
+EndSplineSet
+Validated: 1
+EndChar
+EndChars
+EndSplineFont

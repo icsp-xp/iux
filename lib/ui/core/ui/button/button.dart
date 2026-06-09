@@ -90,20 +90,29 @@ class _ButtonState extends State<Button> {
             child: Row(
               children: [
                 if (widget.leading != null)
-                  DefaultTextStyle(
-                    style: TextStyle(color: buttonTheme.foregroundColor),
-                    child: widget.leading!,
+                  IconTheme(
+                    data: IconThemeData(color: buttonTheme.foregroundColor),
+                    child: DefaultTextStyle(
+                      style: TextStyle(color: buttonTheme.foregroundColor),
+                      child: widget.leading!,
+                    ),
                   ),
 
-                DefaultTextStyle(
-                  style: TextStyle(color: buttonTheme.foregroundColor),
-                  child: widget.child,
+                IconTheme(
+                  data: IconThemeData(color: buttonTheme.foregroundColor),
+                  child: DefaultTextStyle(
+                    style: TextStyle(color: buttonTheme.foregroundColor),
+                    child: widget.child,
+                  ),
                 ),
 
                 if (widget.trailing != null)
-                  DefaultTextStyle(
-                    style: TextStyle(color: buttonTheme.foregroundColor),
-                    child: widget.trailing!,
+                  IconTheme(
+                    data: IconThemeData(color: buttonTheme.foregroundColor),
+                    child: DefaultTextStyle(
+                      style: TextStyle(color: buttonTheme.foregroundColor),
+                      child: widget.trailing!,
+                    ),
                   ),
               ],
             ),
