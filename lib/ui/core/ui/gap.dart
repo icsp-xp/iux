@@ -1,34 +1,49 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class Gap extends StatelessWidget {
-  final double size;
+class Gap extends LeafRenderObjectWidget {
+  final double gap;
 
-  const Gap(this.size, {super.key});
+  const Gap(this.gap, {super.key}) : assert(gap >= 0);
 
   @override
-  Widget build(BuildContext context) {
-    Axis? parentAxis;
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderGap(gap);
+  }
 
-    context.visitAncestorElements((element) {
-      final widget = element.widget;
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    covariant RenderGap renderObject,
+  ) {
+    renderObject.setSize(gap);
+  }
+}
 
-      if (widget is Flex) {
-        parentAxis = widget.direction;
-      } else if (widget is Scrollable) {
-        parentAxis = widget.axis;
+class RenderGap extends RenderBox {
+  RenderGap(double gap) : _gap = gap;
+
+  double _gap;
+
+  void setSize(double value) {
+    if (_gap != value) {
+      _gap = value;
+      markNeedsLayout();
+    }
+  }
+
+  @override
+  void performLayout() {
+    final parentNode = parent;
+
+    if (parentNode is RenderFlex) {
+      if (parentNode.direction == Axis.horizontal) {
+        size = constraints.constrain(Size(_gap, 0));
+      } else {
+        size = constraints.constrain(Size(0, _gap));
       }
-
-      return false;
-    });
-
-    assert(
-      parentAxis != null,
-      'Gap widget must be placed directly inside a Row, Column, Flex, or ListView.',
-    );
-
-    return switch (parentAxis!) {
-      Axis.horizontal => SizedBox(width: size),
-      Axis.vertical => SizedBox(height: size),
-    };
+    } else {
+      size = constraints.constrain(Size(_gap, _gap));
+    }
   }
 }
