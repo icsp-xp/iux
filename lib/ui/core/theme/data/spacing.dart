@@ -7,9 +7,9 @@ class Spacing {
     required this.bigger,
   });
 
-  final int smaller;
-  final int small;
-  final int medium;
-  final int big;
-  final int bigger;
+  final double smaller;
+  final double small;
+  final double medium;
+  final double big;
+  final double bigger;
 }

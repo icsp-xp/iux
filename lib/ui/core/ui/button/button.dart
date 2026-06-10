@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:iux/ui/core/theme/data/button_theme_data.dart';
 import 'package:iux/ui/core/theme/theme_provider.dart';
+import 'package:iux/ui/core/ui/gap.dart';
 
 enum _ButtonType { primary, secondary, error, none }
 
@@ -89,7 +90,7 @@ class _ButtonState extends State<Button> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: [
-                if (widget.leading != null)
+                if (widget.leading != null) ...[
                   IconTheme(
                     data: IconThemeData(color: buttonTheme.foregroundColor),
                     child: DefaultTextStyle(
@@ -97,6 +98,8 @@ class _ButtonState extends State<Button> {
                       child: widget.leading!,
                     ),
                   ),
+                  Gap(theme.spacing.smaller),
+                ],
 
                 IconTheme(
                   data: IconThemeData(color: buttonTheme.foregroundColor),
@@ -106,7 +109,8 @@ class _ButtonState extends State<Button> {
                   ),
                 ),
 
-                if (widget.trailing != null)
+                if (widget.trailing != null) ...[
+                  Gap(theme.spacing.smaller),
                   IconTheme(
                     data: IconThemeData(color: buttonTheme.foregroundColor),
                     child: DefaultTextStyle(
@@ -114,6 +118,7 @@ class _ButtonState extends State<Button> {
                       child: widget.trailing!,
                     ),
                   ),
+                ],
               ],
             ),
           ),
