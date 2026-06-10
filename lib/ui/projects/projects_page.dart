@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:iux/ui/core/icons/icons.dart';
 import 'package:iux/ui/core/ui/button/button.dart';
 import 'package:iux/ui/core/ui/scaffold.dart';
+import 'package:iux/ui/core/ui/text_input.dart';
 
 @RoutePage()
 class ProjectsPage extends StatelessWidget {
@@ -44,6 +45,7 @@ class ProjectsPage extends StatelessWidget {
               ), // TODO: localize
             ],
           ),
+          TextInput('value'),
         ],
       ),
     );
