@@ -1,16 +1,28 @@
 import 'package:flutter/widgets.dart';
+import 'package:iux/data/iux_database.dart';
+import 'package:iux/data/repository/projects_repository.dart';
 import 'package:iux/routing/router.dart';
 import 'package:iux/ui/core/theme/iux_theme.dart';
 import 'package:iux/ui/core/theme/theme.dart';
 import 'package:iux/ui/core/theme/theme_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final database = IuxDatabase();
+
+  final projectsRepository = ProjectsRepository(database);
+
   final router = IuxRouter();
   const theme = IuxTheme();
 
-  runApp(IuxApp(router: router, theme: theme));
+  runApp(
+    MultiRepositoryProvider(
+      providers: [RepositoryProvider.value(value: projectsRepository)],
+      child: IuxApp(router: router, theme: theme),
+    ),
+  );
 }
 
 class IuxApp extends StatelessWidget {

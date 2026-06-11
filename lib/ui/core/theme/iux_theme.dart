@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:iux/core/extension/color.dart';
+import 'package:iux/core/extension/color_ext.dart';
 import 'package:iux/ui/core/theme/data/button_theme_data.dart';
 import 'package:iux/ui/core/theme/data/color_scheme.dart';
 import 'package:iux/ui/core/theme/data/radius_size.dart';
