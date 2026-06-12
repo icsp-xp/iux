@@ -2,12 +2,12 @@ import 'package:flutter/widgets.dart';
 import 'package:iux/ui/core/theme/theme_provider.dart';
 
 class TextInput extends StatefulWidget {
-  final String initialValue;
+  final String value;
   final ValueChanged<String>? onChanged;
   final bool obscureText;
 
   const TextInput({
-    this.initialValue = '',
+    this.value = '',
     this.onChanged,
     this.obscureText = false,
     super.key,
@@ -25,22 +25,34 @@ class _TextInputState extends State<TextInput> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
     _controller = TextEditingController();
+    _updateText(widget.value);
+  }
 
-    _updateText(widget.initialValue);
+  @override
+  void didUpdateWidget(TextInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.value != _controller.text) {
+      _updateText(widget.value);
+    }
+  }
+
+  void _onFocusChange() {
+    setState(() {});
   }
 
   void _updateText(String text) {
     _controller.value = _controller.value.copyWith(
       text: text,
-      selection: TextSelection.fromPosition(
-        TextPosition(offset: _controller.text.length),
-      ),
+      selection: TextSelection.fromPosition(TextPosition(offset: text.length)),
     );
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     _controller.dispose();
     super.dispose();

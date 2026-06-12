@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:iux/ui/core/theme/theme_provider.dart';
 
-class Project extends StatelessWidget {
+class ProjectView extends StatelessWidget {
   final String name;
   final String path;
   // final VoidCallback onChangePath;
   // final VoidCallback onDelete;
 
-  const Project({required this.name, required this.path, super.key});
+  const ProjectView({required this.name, required this.path, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,7 @@ class Project extends StatelessWidget {
       child: Row(
         children: [
           Column(
+            crossAxisAlignment: .start,
             children: [
               Text(
                 name,

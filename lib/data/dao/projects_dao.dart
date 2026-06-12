@@ -9,7 +9,7 @@ class ProjectsDao extends DatabaseAccessor<IuxDatabase>
     with _$ProjectsDaoMixin {
   ProjectsDao(super.attachedDatabase);
 
-  Future<int> upsert(Project project) {
+  Future<int> upsert(ProjectsCompanion project) {
     return into(projects).insert(project, mode: InsertMode.replace);
   }
 

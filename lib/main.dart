@@ -1,18 +1,24 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iux/core/talker_bloc_observer.dart';
 import 'package:iux/data/iux_database.dart';
 import 'package:iux/data/repository/projects_repository.dart';
 import 'package:iux/routing/router.dart';
 import 'package:iux/ui/core/theme/iux_theme.dart';
 import 'package:iux/ui/core/theme/theme.dart';
 import 'package:iux/ui/core/theme/theme_provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talker/talker.dart';
+
+final talker = Talker();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   final database = IuxDatabase();
 
-  final projectsRepository = ProjectsRepository(database);
+  final projectsRepository = ProjectsRepository(database.projectsDao);
+
+  Bloc.observer = TalkerBlocObserver(talker);
 
   final router = IuxRouter();
   const theme = IuxTheme();

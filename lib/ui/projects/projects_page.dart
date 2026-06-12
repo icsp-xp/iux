@@ -2,13 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iux/core/extension/context_ext.dart';
+import 'package:iux/data/iux_database.dart';
+import 'package:iux/domain/request_status.dart';
 import 'package:iux/ui/core/icons/icons.dart';
 import 'package:iux/ui/core/ui/button/button.dart';
 import 'package:iux/ui/core/ui/gap.dart';
 import 'package:iux/ui/core/ui/scaffold.dart';
 import 'package:iux/ui/core/ui/text_input.dart';
 import 'package:iux/ui/projects/cubit/projects_cubit.dart';
-import 'package:iux/ui/projects/widgets/project.dart';
+import 'package:iux/ui/projects/cubit/projects_state.dart';
+import 'package:iux/ui/projects/widgets/add_project_dialog/add_project_dialog.dart';
+import 'package:iux/ui/projects/widgets/project_view.dart';
 
 @RoutePage()
 class ProjectsPage extends StatelessWidget {
@@ -51,14 +55,14 @@ class ProjectsView extends StatelessWidget {
                 Button.primary(
                   leading: const Icon(Icons.plus),
                   child: Text('Add Project'),
-                  onPressed: () {},
+                  onPressed: () => showAddProjectDialog(context),
                 ), // TODO: localize
               ],
             ),
 
             Row(
               spacing: spacing.smaller,
-              children: [Flexible(child: TextInput(initialValue: 'Search'))],
+              children: [Flexible(child: TextInput(value: 'Search'))],
             ),
 
             Expanded(
@@ -68,14 +72,43 @@ class ProjectsView extends StatelessWidget {
                   color: colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(radius.medium),
                 ),
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16.0),
-                  itemBuilder: (_, _) {
-                    return const Project(name: 's', path: 'as');
-                  },
-                  separatorBuilder: (_, _) => Gap(spacing.smaller),
-                  itemCount: 3,
-                ),
+                child:
+                    BlocSelector<
+                      ProjectsCubit,
+                      ProjectsState,
+                      RequestStatus<List<Project>>
+                    >(
+                      selector: (state) => state.projects,
+                      builder: (context, projectsStatus) => projectsStatus.when(
+                        idle: () => const SizedBox.expand(),
+                        pending: () => Text('loading'),
+                        succeeded: (projects) {
+                          if (projects.isEmpty) {
+                            return const Center(child: Text('Empty'));
+                          }
+
+                          return ListView.separated(
+                            padding: const EdgeInsets.all(16.0),
+                            itemCount: projects.length,
+                            separatorBuilder: (_, _) => Gap(spacing.smaller),
+                            itemBuilder: (context, index) {
+                              final project = projects[index];
+
+                              return ProjectView(
+                                name: project.name,
+                                path: project.path,
+                              );
+                            },
+                          );
+                        },
+                        failed: (failure) => Center(
+                          child: Text(
+                            'Unexpected error.',
+                            style: TextStyle(color: colorScheme.error),
+                          ),
+                        ),
+                      ),
+                    ),
               ),
             ),
           ],
