@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:iux/core/mixin/error_handler_mixin.dart';
 import 'package:iux/data/dao/projects_dao.dart';
 import 'package:iux/data/iux_database.dart';
+import 'package:iux/domain/error_handler.dart';
 import 'package:iux/domain/failure.dart';
 
-class ProjectsRepository with ErrorHandlerMixin {
+class ProjectsRepository {
   final ProjectsDao _projectsDao;
 
   ProjectsRepository(this._projectsDao);
@@ -16,7 +16,7 @@ class ProjectsRepository with ErrorHandlerMixin {
         .distinct()
         .map((data) => right<Failure, List<Project>>(data))
         .handleError((error, stackTrace) {
-          final failure = handleError(
+          final failure = ErrorHandler.handle(
             error,
             stackTrace,
             'On watch all projects',
@@ -25,7 +25,7 @@ class ProjectsRepository with ErrorHandlerMixin {
         });
   }
 
-  TaskEither<Failure, Unit> upsert(String? name, String? dirPath) =>
+  TaskEither<Failure, Unit> upsert(final String? name, final String? dirPath) =>
       TaskEither.tryCatch(
         () => _projectsDao
             .upsert(
@@ -38,6 +38,6 @@ class ProjectsRepository with ErrorHandlerMixin {
             )
             .then((_) => unit),
         (error, stackTrace) =>
-            handleError(error, stackTrace, 'On upsert project'),
+            ErrorHandler.handle(error, stackTrace, 'On upsert project'),
       );
 }

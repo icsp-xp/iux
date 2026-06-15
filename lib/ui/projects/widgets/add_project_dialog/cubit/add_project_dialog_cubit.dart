@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:iux/core/constants.dart';
 import 'package:iux/data/repository/projects_repository.dart';
+import 'package:iux/domain/failure.dart';
+import 'package:iux/domain/validators/path_validator.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
+import 'package:path/path.dart' as p;
 
 final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
   final ProjectsRepository _projectsRepository;
@@ -15,25 +22,54 @@ final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
     }
 
     emit(state.copyWith(isAdding: true));
-    await _projectsRepository.upsert(state.name, state.dirPath).run();
+    final result =
+        await TaskEither<Failure, Unit>.tryCatch(() async {
+              final file = File(
+                p.join(
+                  state.dirPath,
+                  '${state.name}${Constants.canvasFileExt}',
+                ),
+              );
+              await file.create(recursive: true);
+              return unit;
+            }, (_, _) => const UnexpectedFailure())
+            .flatMap(
+              (_) => _projectsRepository.upsert(state.name, state.dirPath),
+            )
+            .run();
+
+    result.fold(
+      (failure) {
+        // TODO: handle failure
+      },
+      (_) {
+        /* empty */
+      },
+    );
+
     emit(state.copyWith(isAdding: false));
   }
 
-  void onNameChanged(String value) {
-    final trimmed = value.trim(); // TODO: validate name
+  void onNameChanged(final String value) {
+    final trimmed = value.trim();
     emit(state.copyWith(name: trimmed));
   }
 
-  void onDirPathChanged(String value) {
-    final trimmed = value.trim(); // TODO: validate dirPath
-    emit(state.copyWith(dirPath: trimmed));
+  void onDirPathChanged(final String value) {
+    final trimmed = value.trim();
+    emit(
+      state.copyWith(
+        dirPath: trimmed,
+        isDirPathValid: PathValidator.isValid(trimmed).getOrElse((_) => false),
+      ),
+    );
   }
 
-  Future<void> getProjectDir(String dialogTitle) async {
+  Future<void> getProjectDir(final String dialogTitle) async {
     final path = await FilePicker.getDirectoryPath(dialogTitle: dialogTitle);
 
     if (path != null) {
-      emit(state.copyWith(dirPath: path));
+      onDirPathChanged(path);
     }
   }
 }

@@ -16,6 +16,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   fpdart: ^1.2.0
   freezed_annotation: ^3.1.0
+  path: ^1.9.1
   path_provider: ^2.1.5
   talker: ^5.1.17
   

@@ -9,10 +9,14 @@ abstract class AddProjectDialogState with _$AddProjectDialogState {
 
   const factory AddProjectDialogState({
     @Default('') String name,
+
     @Default('') String dirPath,
+    @Default(false) bool isDirPathValid,
 
     @Default(false) bool isAdding,
   }) = _AddProjectDialogState;
 
-  bool canAdd() => !isAdding && name.isNotBlank && dirPath.isNotBlank;
+  bool _isDirPathValid() => dirPath.isNotBlank && isDirPathValid;
+
+  bool canAdd() => !isAdding && name.isNotBlank && _isDirPathValid();
 }

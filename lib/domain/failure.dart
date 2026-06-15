@@ -17,3 +17,7 @@ class DataNotFoundFailure extends Failure {
 class InvalidDataFailure extends Failure {
   const InvalidDataFailure();
 }
+
+class UnsupportedOs extends Failure {
+  const UnsupportedOs();
+}
