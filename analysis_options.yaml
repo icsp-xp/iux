@@ -6,6 +6,8 @@ analyzer:
     - "**/*.gr.dart"
     - "build/**"
     - "mason/**"
+  errors:
+    invalid_annotation_target: ignore
 
 bloc:
   rules:

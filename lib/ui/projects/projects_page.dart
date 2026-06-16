@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iux/core/extension/context_ext.dart';
-import 'package:iux/data/iux_database.dart';
+import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
 import 'package:iux/ui/core/icons/icons.dart';
 import 'package:iux/ui/core/ui/button/button.dart';
@@ -21,7 +21,10 @@ class ProjectsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProjectsCubit(projectsRepository: context.read()),
+      create: (context) => ProjectsCubit(
+        projectsRepository: context.read(),
+        iuxSettingsRepository: context.read(),
+      ),
       child: const ProjectsView(),
     );
   }
@@ -81,7 +84,7 @@ class ProjectsView extends StatelessWidget {
                       selector: (state) => state.projects,
                       builder: (context, projectsStatus) => projectsStatus.when(
                         idle: () => const SizedBox.expand(),
-                        pending: () => Text('loading'),
+                        pending: () => Center(child: Text('loading')),
                         succeeded: (projects) {
                           if (projects.isEmpty) {
                             return const Center(child: Text('Empty'));
@@ -96,7 +99,7 @@ class ProjectsView extends StatelessWidget {
 
                               return ProjectView(
                                 name: project.name,
-                                path: project.path,
+                                path: project.dirPath,
                               );
                             },
                           );

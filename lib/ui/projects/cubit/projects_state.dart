@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:iux/data/iux_database.dart';
+import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
 
 part 'projects_state.freezed.dart';

@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:iux/core/constants.dart';
-import 'package:iux/data/repository/projects_repository.dart';
+import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/domain/failure.dart';
 import 'package:iux/domain/validators/path_validator.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
