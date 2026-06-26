@@ -25,20 +25,20 @@ final class ProjectsRepository {
       final entities = await projectsDir.list().toList();
       final projects = <Project>[];
 
-      // FIX
       for (final entity in entities) {
-        if (entity is Directory) {
-          if (entity.existsSync()) {
-            final dirStat = entity.statSync();
+        if (entity is Directory &&
+            Directory(
+              p.join(entity.path, Constants.iuxProjectFolder),
+            ).existsSync()) {
+          final dirStat = entity.statSync();
 
-            projects.add(
-              Project(
-                name: p.basename(entity.path),
-                dirPath: entity.path,
-                createdAt: dirStat.changed,
-              ),
-            );
-          }
+          projects.add(
+            Project(
+              name: p.basename(entity.path),
+              dirPath: entity.path,
+              createdAt: dirStat.changed,
+            ),
+          );
         }
       }
 
