@@ -72,6 +72,7 @@ class _ButtonState extends State<Button> {
     final isDisabled = widget.onPressed == null;
 
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
       child: GestureDetector(
