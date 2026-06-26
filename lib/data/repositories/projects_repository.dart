@@ -78,14 +78,15 @@ final class ProjectsRepository {
     final String projectPath,
   ) => TaskEither.tryCatch(
     () async {
-      final projectFile = File(
-        p.joinAll([
-          projectPath,
-          projectName,
-          '$projectName${Constants.canvasFileExt}',
-        ]),
+      final projectFolderPath = p.join(projectPath, projectName);
+      final iuxFolderPath = p.join(
+        projectFolderPath,
+        Constants.iuxProjectFolder,
       );
-      await projectFile.create(recursive: true);
+
+      await Directory(projectFolderPath).create(recursive: true);
+      Directory(iuxFolderPath).create();
+
       return unit;
     },
     (error, stackTrace) =>
