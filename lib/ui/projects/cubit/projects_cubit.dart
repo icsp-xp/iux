@@ -43,6 +43,10 @@ final class ProjectsCubit extends Cubit<ProjectsState> {
     );
   }
 
+  Future<void> delete(final String projectDirPath) async {
+    await _projectsRepository.delete(projectDirPath).run();
+  }
+
   @override
   Future<void> close() {
     _projectsSubscription.cancel();

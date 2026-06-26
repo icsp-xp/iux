@@ -75,16 +75,13 @@ final class ProjectsRepository {
 
   TaskEither<Failure, Unit> upsert(
     final String projectName,
-    final String projectPath,
+    final String projectsDirPath,
   ) => TaskEither.tryCatch(
     () async {
-      final projectFolderPath = p.join(projectPath, projectName);
-      final iuxFolderPath = p.join(
-        projectFolderPath,
-        Constants.iuxProjectFolder,
-      );
+      final projectDirPath = p.join(projectsDirPath, projectName);
+      final iuxFolderPath = p.join(projectDirPath, Constants.iuxProjectFolder);
 
-      await Directory(projectFolderPath).create(recursive: true);
+      await Directory(projectDirPath).create(recursive: true);
       Directory(iuxFolderPath).create();
 
       return unit;
@@ -93,18 +90,18 @@ final class ProjectsRepository {
         ErrorHandler.handle(error, stackTrace, 'On upsert project'),
   );
 
-  TaskEither<Failure, Unit> delete(
-    final String projectName,
-    final String projectPath,
-  ) => TaskEither.tryCatch(
-    () async {
-      final projectDir = Directory(p.join(projectPath, projectName));
-      if (projectDir.existsSync()) {
-        await projectDir.delete(recursive: true);
-      }
-      return unit;
-    },
-    (error, stackTrace) =>
-        ErrorHandler.handle(error, stackTrace, 'On delete project'),
-  );
+  TaskEither<Failure, Unit> delete(final String projectDirPath) =>
+      TaskEither.tryCatch(
+        () async {
+          final projectDir = Directory(projectDirPath);
+          if (projectDir.existsSync()) {
+            await projectDir.delete(recursive: true);
+          } else {
+            throw const DataNotFoundFailure();
+          }
+          return unit;
+        },
+        (error, stackTrace) =>
+            ErrorHandler.handle(error, stackTrace, 'On delete project'),
+      );
 }

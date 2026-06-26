@@ -100,6 +100,9 @@ class ProjectsView extends StatelessWidget {
                               return ProjectView(
                                 name: project.name,
                                 path: project.dirPath,
+                                onDelete: () => context
+                                    .read<ProjectsCubit>()
+                                    .delete(project.dirPath),
                               );
                             },
                           );
