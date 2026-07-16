@@ -82,7 +82,9 @@ final class ProjectsRepository {
       final iuxFolderPath = p.join(projectDirPath, Constants.iuxProjectFolder);
 
       await Directory(projectDirPath).create(recursive: true);
-      Directory(iuxFolderPath).create();
+      await File(p.join(projectDirPath, '$projectName${Constants.canvasFileExt}')).create();
+      await Directory(iuxFolderPath).create();
+      // TODO: create project settings file
 
       return unit;
     },
