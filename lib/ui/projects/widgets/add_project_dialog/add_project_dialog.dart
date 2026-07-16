@@ -16,8 +16,10 @@ void showAddProjectDialog(BuildContext context) {
   showRawDialog(
     context: context,
     builder: (context) => BlocProvider(
-      create: (context) =>
-          AddProjectDialogCubit(projectsRepository: context.read()),
+      create: (context) => AddProjectDialogCubit(
+        projectsRepository: context.read(),
+        iuxSettingsRepository: context.read(),
+      )..setDirPathToDefault(),
       child: Dialog(
         builder: (context) => Column(
           crossAxisAlignment: .start,
