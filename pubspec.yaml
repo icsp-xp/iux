@@ -20,7 +20,6 @@ dependencies:
   stream_transform: ^2.1.1
   talker: ^5.1.17
   uuid: ^4.5.3
-  watcher: ^1.2.1
   
 dev_dependencies:
   flutter_test:

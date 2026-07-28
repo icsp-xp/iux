@@ -24,7 +24,7 @@ class ProjectsPage extends StatelessWidget {
       create: (context) => ProjectsCubit(
         projectsRepository: context.read(),
         iuxSettingsRepository: context.read(),
-      ),
+      )..watchProjects(),
       child: const ProjectsView(),
     );
   }

@@ -8,68 +8,39 @@ import 'package:iux/domain/failure.dart';
 import 'package:iux/domain/model/project.dart';
 import 'package:path/path.dart' as p;
 import 'package:stream_transform/stream_transform.dart';
-import 'package:watcher/watcher.dart';
 
 final class ProjectsRepository {
-  Future<Either<Failure, List<Project>>> getProjects(
-    String projectsDirPath,
-  ) async {
-    final projectsDir = Directory(projectsDirPath);
+  bool isIuxProject(final String dirPath) =>
+      Directory(p.join(dirPath, Constants.iuxProjectFolder)).existsSync();
 
-    try {
-      if (!projectsDir.existsSync()) {
-        await projectsDir.create(recursive: true);
-        return right([]);
+  Stream<List<Project>> watchProjects(Directory parentDir) async* {
+    List<Project> fetchCurrentProjects() {
+      if (!parentDir.existsSync()) {
+        return [];
       }
 
-      final entities = await projectsDir.list().toList();
-      final projects = <Project>[];
-
-      for (final entity in entities) {
-        if (entity is Directory &&
-            Directory(
-              p.join(entity.path, Constants.iuxProjectFolder),
-            ).existsSync()) {
-          final dirStat = entity.statSync();
-
-          projects.add(
-            Project(
-              name: p.basename(entity.path),
-              dirPath: entity.path,
+      return parentDir
+          .listSync(recursive: false, followLinks: false)
+          .whereType<Directory>()
+          .where((dir) => isIuxProject(dir.path))
+          .map((projectDir) {
+            final dirStat = projectDir.statSync();
+            return Project(
+              name: p.basename(projectDir.path),
+              dirPath: projectDir.path,
               createdAt: dirStat.changed,
-            ),
-          );
-        }
-      }
-
-      return right(projects);
-    } catch (error) {
-      return left(
-        ErrorHandler.handle(error, StackTrace.current, 'On list projects'),
-      );
+            );
+          })
+          .toList();
     }
-  }
 
-  Stream<Either<Failure, List<Project>>> watchProjects(
-    final String projectsDirPath,
-  ) async* {
-    final projectsDir = Directory(projectsDirPath);
+    yield fetchCurrentProjects();
 
-    try {
-      if (!projectsDir.existsSync()) {
-        await projectsDir.create(recursive: true);
-      }
-
-      yield* Stream.fromFuture(getProjects(projectsDirPath));
-
-      final watcher = DirectoryWatcher(projectsDir.path);
-      yield* watcher.events
-          .debounce(const Duration(milliseconds: 500))
-          .asyncMap((_) => getProjects(projectsDirPath));
-    } catch (error) {
-      yield left(
-        ErrorHandler.handle(error, StackTrace.current, 'On watch projects'),
-      );
+    await for (final _
+        in parentDir
+            .watch(recursive: false)
+            .debounce(const Duration(milliseconds: 300))) {
+      yield fetchCurrentProjects();
     }
   }
 
@@ -82,7 +53,9 @@ final class ProjectsRepository {
       final iuxFolderPath = p.join(projectDirPath, Constants.iuxProjectFolder);
 
       await Directory(projectDirPath).create(recursive: true);
-      await File(p.join(projectDirPath, '$projectName${Constants.canvasFileExt}')).create();
+      await File(
+        p.join(projectDirPath, '$projectName${Constants.canvasFileExt}'),
+      ).create();
       await Directory(iuxFolderPath).create();
       // TODO: create project settings file
 

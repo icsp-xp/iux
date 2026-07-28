@@ -6,18 +6,18 @@ final class UnexpectedFailure extends Failure {
   const UnexpectedFailure();
 }
 
-class DataAlreadyExistsFailure extends Failure {
+final class DataAlreadyExistsFailure extends Failure {
   const DataAlreadyExistsFailure();
 }
 
-class DataNotFoundFailure extends Failure {
+final class DataNotFoundFailure extends Failure {
   const DataNotFoundFailure();
 }
 
-class InvalidDataFailure extends Failure {
+final class InvalidDataFailure extends Failure {
   const InvalidDataFailure();
 }
 
-class UnsupportedOs extends Failure {
+final class UnsupportedOs extends Failure {
   const UnsupportedOs();
 }
