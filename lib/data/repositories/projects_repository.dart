@@ -44,7 +44,7 @@ final class ProjectsRepository {
     }
   }
 
-  TaskEither<Failure, Unit> upsert(
+  TaskEither<Failure, Unit> create(
     final String projectName,
     final String projectsDirPath,
   ) => TaskEither.tryCatch(
@@ -52,7 +52,13 @@ final class ProjectsRepository {
       final projectDirPath = p.join(projectsDirPath, projectName);
       final iuxFolderPath = p.join(projectDirPath, Constants.iuxProjectFolder);
 
-      await Directory(projectDirPath).create(recursive: true);
+      final projectDir = Directory(projectDirPath);
+
+      if (projectDir.existsSync()) {
+        throw const DataAlreadyExistsFailure();
+      }
+
+      await projectDir.create(recursive: true);
       await File(
         p.join(projectDirPath, '$projectName${Constants.canvasFileExt}'),
       ).create();

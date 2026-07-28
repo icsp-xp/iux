@@ -30,7 +30,7 @@ final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
 
     emit(state.copyWith(isAdding: true));
     final result = await _projectsRepository
-        .upsert(state.name, state.dirPath)
+        .create(state.name, state.dirPath) // TODO: 
         .run();
 
     result.fold(
