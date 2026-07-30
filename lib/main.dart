@@ -8,6 +8,7 @@ import 'package:iux/core/talker_bloc_observer.dart';
 import 'package:iux/data/repositories/iux_settings_repository.dart';
 import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/data/services/iux_settings_service.dart';
+import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/routing/router.dart';
 import 'package:iux/ui/core/theme/iux_theme.dart';
 import 'package:iux/ui/core/theme/theme.dart';
@@ -31,6 +32,9 @@ void main() async {
   final iuxSettingsRepository = IuxSettingsRepository(iuxSettingsService);
   final projectsRepository = ProjectsRepository();
 
+  // Use cases
+  final getFolderPathUseCase = GetFolderPathUseCase();
+
   Bloc.observer = TalkerBlocObserver(talker);
 
   final router = IuxRouter();
@@ -41,6 +45,8 @@ void main() async {
       providers: [
         RepositoryProvider.value(value: iuxSettingsRepository),
         RepositoryProvider.value(value: projectsRepository),
+        // Use cases
+        RepositoryProvider.value(value: getFolderPathUseCase),
       ],
       child: IuxApp(router: router, theme: theme),
     ),

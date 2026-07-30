@@ -24,7 +24,8 @@ class ProjectsPage extends StatelessWidget {
       create: (context) => ProjectsCubit(
         projectsRepository: context.read(),
         iuxSettingsRepository: context.read(),
-      )..watchProjects(),
+        getFolderPathUseCase: context.read(),
+      )..init(),
       child: const ProjectsView(),
     );
   }
@@ -52,9 +53,31 @@ class ProjectsView extends StatelessWidget {
             Row(
               spacing: spacing.smaller,
               children: [
+                // TODO: localize
+                Text('Projects:', style: typography.titleMedium),
                 Expanded(
-                  child: Text('Projects', style: typography.titleMedium),
-                ), // TODO: localize
+                  child: Align(
+                    alignment: .centerLeft,
+                    child: BlocSelector<ProjectsCubit, ProjectsState, String?>(
+                      selector: (state) => state.projectsDirPath,
+                      builder: (context, projectDir) {
+                        return GhostButton(
+                          onPressed: () => context
+                              .read<ProjectsCubit>()
+                              .getProjectDir('Select Project Directory'),
+                          child: Text(
+                            projectDir ??
+                                'No directory selected', // TODO: localize
+                            overflow: .ellipsis,
+                            style: typography.titleSmall.copyWith(
+                              decoration: .underline,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
                 Button.primary(
                   leading: const Icon(Icons.plus),
                   child: Text('Add Project'),

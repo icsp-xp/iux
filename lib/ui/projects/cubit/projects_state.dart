@@ -9,5 +9,6 @@ abstract class ProjectsState with _$ProjectsState {
   const factory ProjectsState({
     @Default(RequestStatus<List<Project>>.idle())
     RequestStatus<List<Project>> projects,
+    String? projectsDirPath
   }) = _ProjectsState;
 }

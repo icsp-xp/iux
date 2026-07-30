@@ -11,6 +11,7 @@ class Button extends StatefulWidget {
   final Widget? leading;
   final Widget? trailing;
   final Widget child;
+  final EdgeInsets padding;
   final _ButtonType _buttonType;
 
   const Button({
@@ -19,6 +20,7 @@ class Button extends StatefulWidget {
     this.leading,
     this.trailing,
     this.onPressed,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     super.key,
   }) : _buttonType = _ButtonType.none;
 
@@ -27,6 +29,7 @@ class Button extends StatefulWidget {
     this.leading,
     this.trailing,
     this.onPressed,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     super.key,
   }) : buttonThemeData = null,
        _buttonType = _ButtonType.primary;
@@ -36,6 +39,7 @@ class Button extends StatefulWidget {
     this.leading,
     this.trailing,
     this.onPressed,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     super.key,
   }) : buttonThemeData = null,
        _buttonType = _ButtonType.secondary;
@@ -45,6 +49,7 @@ class Button extends StatefulWidget {
     this.leading,
     this.trailing,
     this.onPressed,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     super.key,
   }) : buttonThemeData = null,
        _buttonType = _ButtonType.error;
@@ -88,8 +93,9 @@ class _ButtonState extends State<Button> {
             border: buttonTheme.border,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: widget.padding,
             child: Row(
+              mainAxisSize: .min,
               children: [
                 if (widget.leading != null) ...[
                   IconTheme(
@@ -124,6 +130,24 @@ class _ButtonState extends State<Button> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class GhostButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final Widget child;
+
+  const GhostButton({required this.child, required this.onPressed, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Padding(padding: const EdgeInsets.all(2), child: child),
       ),
     );
   }

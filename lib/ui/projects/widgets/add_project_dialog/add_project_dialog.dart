@@ -19,6 +19,7 @@ void showAddProjectDialog(BuildContext context) {
       create: (context) => AddProjectDialogCubit(
         projectsRepository: context.read(),
         iuxSettingsRepository: context.read(),
+        getFolderPathUseCase: context.read(),
       )..setDirPathToDefault(),
       child: Dialog(
         builder: (context) => Column(
@@ -52,7 +53,7 @@ void showAddProjectDialog(BuildContext context) {
                   child: Icon(Icons.plus),
                   onPressed: () => context
                       .read<AddProjectDialogCubit>()
-                      .getProjectDir('Project folder'),
+                      .getProjectDir('Select Project Directory'),
                 ),
               ],
             ),

@@ -1,17 +1,19 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iux/data/repositories/iux_settings_repository.dart';
 import 'package:iux/data/repositories/projects_repository.dart';
+import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/domain/validators/path_validator.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
 
 final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
   final ProjectsRepository _projectsRepository;
   final IuxSettingsRepository _iuxSettingsRepository;
+  final GetFolderPathUseCase _getFolderPathUseCase;
 
   AddProjectDialogCubit({
     required this._projectsRepository,
     required this._iuxSettingsRepository,
+    required this._getFolderPathUseCase,
   }) : super(const AddProjectDialogState());
 
   Future<void> setDirPathToDefault() async {
@@ -30,7 +32,7 @@ final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
 
     emit(state.copyWith(isAdding: true));
     final result = await _projectsRepository
-        .create(state.name, state.dirPath) // TODO: 
+        .create(state.name, state.dirPath) // TODO:
         .run();
 
     result.fold(
@@ -63,10 +65,10 @@ final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
   void onDirPathChanged(final String value) => _setDirPath(value);
 
   Future<void> getProjectDir(final String dialogTitle) async {
-    final path = await FilePicker.getDirectoryPath(dialogTitle: dialogTitle);
-
-    if (path != null) {
-      _setDirPath(path);
-    }
+    final result = await _getFolderPathUseCase.get(dialogTitle);
+    result.fold(
+      (_) => emit(state.copyWith(isDirPathValid: false)),
+      (path) => emit(state.copyWith(dirPath: path, isDirPathValid: true)),
+    );
   }
 }
