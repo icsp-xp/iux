@@ -1,6 +1,7 @@
 import 'package:iux/ui/core/theme/data/color_scheme.dart';
 import 'package:iux/ui/core/theme/data/radius_size.dart';
 import 'package:iux/ui/core/theme/data/spacing.dart';
+import 'package:iux/ui/core/theme/data/toast_theme_data.dart';
 import 'package:iux/ui/core/theme/data/typography.dart';
 import 'package:iux/ui/core/theme/data/button_theme_data.dart';
 
@@ -16,6 +17,8 @@ class ThemeData {
   final ButtonThemeData secondaryButtonThemeData;
   final ButtonThemeData errorButtonThemeData;
 
+  final ToastThemeData toastThemeData;
+
   const ThemeData({
     required this.colorScheme,
     required this.typography,
@@ -25,5 +28,7 @@ class ThemeData {
     required this.primaryButtonThemeData,
     required this.secondaryButtonThemeData,
     required this.errorButtonThemeData,
+    
+    required this.toastThemeData,
   });
 }

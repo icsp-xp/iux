@@ -4,6 +4,7 @@ import 'package:iux/ui/core/theme/data/button_theme_data.dart';
 import 'package:iux/ui/core/theme/data/color_scheme.dart';
 import 'package:iux/ui/core/theme/data/radius_size.dart';
 import 'package:iux/ui/core/theme/data/spacing.dart';
+import 'package:iux/ui/core/theme/data/toast_theme_data.dart';
 import 'package:iux/ui/core/theme/data/typography.dart';
 import 'package:iux/ui/core/theme/theme.dart';
 
@@ -275,5 +276,24 @@ class IuxTheme extends Theme {
       backgroundColor: colorScheme.error,
       borderRadius: BorderRadius.circular(radiusSize.small),
     );
+  }
+
+  @override
+  ToastThemeData getToastThemeData(Brightness brightness) {
+    final colorScheme = getColorScheme(brightness);
+    final radiusSize = getRadiusSize();
+
+    return switch (brightness) {
+      Brightness.dark => ToastThemeData(
+        foregroundColor: colorScheme.onSurfaceContainer,
+        backgroundColor: colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(radiusSize.small),
+      ),
+      Brightness.light => ToastThemeData(
+        foregroundColor: colorScheme.onSurfaceContainer,
+        backgroundColor: colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(radiusSize.small),
+      ),
+    };
   }
 }
