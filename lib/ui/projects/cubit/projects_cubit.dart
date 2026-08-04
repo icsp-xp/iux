@@ -50,7 +50,7 @@ final class ProjectsCubit extends Cubit<ProjectsState> {
     await _projectsRepository.delete(projectDirPath).run();
   }
 
-  Future<void> getProjectDir(final String dialogTitle) async {
+  Future<void> chooseProjectDir(final String dialogTitle) async {
     final result = await _getFolderPathUseCase.get(dialogTitle);
     result.fold(
       (_) {}, // TODO: show snackbar message

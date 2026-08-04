@@ -6,7 +6,7 @@ import 'package:iux/domain/error_handler.dart';
 import 'package:iux/domain/failure.dart';
 import 'package:iux/domain/model/iux_settings.dart';
 
-final class IuxSettingsRepository {
+class IuxSettingsRepository {
   final IuxSettingsService _iuxSettingsService;
 
   IuxSettings? _settings;

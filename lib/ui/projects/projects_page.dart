@@ -64,7 +64,7 @@ class ProjectsView extends StatelessWidget {
                         return GhostButton(
                           onPressed: () => context
                               .read<ProjectsCubit>()
-                              .getProjectDir('Select Project Directory'),
+                              .chooseProjectDir('Select Project Directory'),
                           child: Text(
                             projectDir ??
                                 'No directory selected', // TODO: localize

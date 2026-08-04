@@ -9,7 +9,7 @@ import 'package:iux/domain/model/project.dart';
 import 'package:path/path.dart' as p;
 import 'package:stream_transform/stream_transform.dart';
 
-final class ProjectsRepository {
+class ProjectsRepository {
   bool isIuxProject(final String dirPath) =>
       Directory(p.join(dirPath, Constants.iuxProjectFolder)).existsSync();
 
