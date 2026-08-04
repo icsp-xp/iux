@@ -1,7 +1,7 @@
 [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason)
 
 # iux
-Application design system built with Flutter and custom themeable UI components 
+Application design system built with Flutter using [ForUI](https://forui.dev) for themeable UI components. For a complete list of available components, see the [ForUI documentation](https://forui.dev/docs).
 
 ## Table of Contents
 - [Getting Started](#getting-started)
@@ -10,7 +10,6 @@ Application design system built with Flutter and custom themeable UI components
         - [page](#page)
         - [freezed_class](#freezed_class)
 - [Project Structure](#project-structure)
-- [How to Add New Icons](#how-to-add-new-icons)
 
 ## Getting Started
 This project uses [FVM](https://fvm.app/documentation/getting-started/installation) to handle the flutter version so before running any **Flutter** or **Dart** command, you should prefix it with **fvm** e.g.:
@@ -32,7 +31,7 @@ fvm dart run mason_cli:mason
 ```
 or to avoid writing every time the command you can save the following as `fvm_mason` in a directory in your `PATH`:
 ```bash
-#!/usr/bin/bash
+#!/bin/bash
 
 fvm dart run mason_cli:mason "$@"
 ```
@@ -79,44 +78,3 @@ fvm_mason make freezed_class -o <folder path>
 
 ## Project Structure
 This project follows the [Flutter package structure](https://docs.flutter.dev/app-architecture/case-study#package-structure) recommended in the official documentation.
-
-## How to Add New Icons
-This project uses a custom icon font generated via [FontForge](https://fontforge.org). Follow this guide to add new icons to the existing set.
-
-### File Locations
-* **FontForge Project File:** `iux_icons_font.sfd` (located in the project root)
-* **Exported Font File:** `assets/fonts/iux_icons_font.ttf`
-* **Flutter Mapping Class:** `lib/ui/core/icons/icons.dart`
-
-### Step-by-Step Procedure
-#### 1. Editing the FontForge Project
-1. Open **FontForge** and load the `iux_icons_font.sfd`.
-2. Locate the first available empty cell in the grid (sequentially after the last existing icon).
-3. Double-click the empty cell to open the editor view.
-4. Import your vector asset (`File > Import`) or draw your icon.
-   * *2048 UPM Rule:* Ensure the icon sits properly on the **Baseline (0)** and fits within the **2048** unit grid, leaving about 1 or 2 grid squares as a padding/side bearing on each side.
-5. Set the glyph properties:
-   * Go to **Glyph > Glyph Info**.
-   * In the **Glyph Name** field, type a descriptive name (e.g., `shopping-cart` or `arrow-back`).
-   * In the **Unicode** field, assign the next available hexadecimal value in the **Private Use Area (PUA)** (e.g., `U-E001`, `U-E002`, etc.).
-6. Save the project (`File > Save` or `Ctrl + S`) to update the `.sfd` source file.
-
-#### 2. Exporting the .ttf File
-1. In FontForge, go to **File > Generate Fonts...**
-2. Select **TrueType** from the format dropdown menu.
-3. Overwrite the existing font file in the assets folder:
-   `assets/fonts/iux_icons_font.ttf`
-4. If FontForge displays validation warnings during generation (e.g., *Non-integral coordinates*), you can usually ignore them or click *Fix*.
-
-#### 3. Updating the Flutter Class
-Open the icons class file in `lib/ui/core/icons/icons.dart` and declare a new static constant mapping to the exact Unicode hex code you just defined in FontForge.
-
-```dart
-abstract class IuxIcons {
-  static const String _fontFamily = 'iuxIconsFont'; // Must match the one in pubspec.yaml
-
-  // Existing icons...
-
-  // Add your new icon here with the unicode chosen in FontForge (0xe001 in this example)
-  static const IconData shoppingCart = IconData(0xe001, fontFamily: _fontFamily);
-}

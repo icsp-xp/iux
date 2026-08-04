@@ -1,6 +1,7 @@
 {
   "dart.flutterSdkPath": ".fvm/versions/3.44.1",
   "cSpell.words": [
-    "daos"
+    "daos",
+    "forui"
   ],
 }

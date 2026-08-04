@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:iux/ui/core/theme/theme_provider.dart';
-import 'package:iux/ui/core/ui/button/button.dart';
+import 'package:forui/forui.dart';
+import 'package:iux/ui/core/constants/spacing.dart';
 
 class ProjectView extends StatelessWidget {
   final String name;
@@ -17,19 +17,17 @@ class ProjectView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final typography = ThemeProvider.of(context).typography;
-    final colorScheme = ThemeProvider.of(context).colorScheme;
-    final spacing = ThemeProvider.of(context).spacing;
+    final theme = FTheme.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       decoration: BoxDecoration(
         border: Border(
-          left: BorderSide(color: colorScheme.primary, width: 4.0),
+          left: BorderSide(color: theme.colors.primary, width: 4.0),
         ),
       ),
       child: Row(
-        spacing: spacing.medium,
+        spacing: Spacing.md,
         children: [
           Expanded(
             child: Column(
@@ -37,21 +35,25 @@ class ProjectView extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: typography.bodyMedium.copyWith(
+                  style: theme.typography.body.md.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   path,
-                  style: typography.bodyMedium.copyWith(
-                    color: colorScheme.outline,
+                  style: theme.typography.body.md.copyWith(
+                    color: theme.colors.border,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
               ],
             ),
           ),
-          Button.error(onPressed: onDelete, child: const Text('delete')),
+          FButton(
+            variant: .destructive,
+            onPress: onDelete,
+            child: const Text('delete'),
+          ),
         ],
       ),
     );

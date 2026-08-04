@@ -1,86 +1,101 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iux/core/extension/context_ext.dart';
-import 'package:iux/ui/core/icons/icons.dart';
-import 'package:iux/ui/core/ui/button/button.dart';
-import 'package:iux/ui/core/ui/dialog.dart';
+import 'package:forui/forui.dart';
+import 'package:iux/ui/core/constants/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
-import 'package:iux/ui/core/ui/text_input.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_cubit.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
 
 void showAddProjectDialog(BuildContext context) {
-  final spacing = context.theme.spacing;
-
-  showRawDialog(
+  showFDialog(
     context: context,
-    builder: (context) => BlocProvider(
+    builder: (context, style, animation) => BlocProvider(
       create: (context) => AddProjectDialogCubit(
         projectsRepository: context.read(),
         iuxSettingsRepository: context.read(),
         getFolderPathUseCase: context.read(),
       )..setDirPathToDefault(),
-      child: Dialog(
-        builder: (context) => Column(
-          crossAxisAlignment: .start,
-          children: [
-            Text('Name'),
-            TextInput(
-              onChanged: context.read<AddProjectDialogCubit>().onNameChanged,
-            ),
-
-            Gap(spacing.small),
-
-            Text('Dir Path'),
-            Row(
-              spacing: spacing.smaller,
-              children: [
-                Expanded(
-                  child:
-                      BlocBuilder<AddProjectDialogCubit, AddProjectDialogState>(
-                        builder: (context, state) {
-                          return TextInput(
-                            value: state.dirPath,
-                            onChanged: context
-                                .read<AddProjectDialogCubit>()
-                                .onDirPathChanged,
-                          );
-                        },
-                      ),
-                ),
-                Button.secondary(
-                  child: Icon(Icons.plus),
-                  onPressed: () => context
+      child: FDialog(
+        style: style,
+        animation: animation,
+        builder: (context, style) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text('Name'),
+              FTextField(
+                control: FTextFieldControl.managed(
+                  onChange: (textEditingValue) => context
                       .read<AddProjectDialogCubit>()
-                      .getProjectDir('Select Project Directory'),
+                      .onNameChanged(textEditingValue.text),
                 ),
-              ],
-            ),
+              ),
 
-            const Spacer(),
+              const Gap(Spacing.sm),
 
-            Row(
-              spacing: spacing.smaller,
-              mainAxisAlignment: .center,
-              children: [
-                Button.secondary(child: Text('Cancel'), onPressed: context.pop),
-                BlocBuilder<AddProjectDialogCubit, AddProjectDialogState>(
-                  builder: (context, state) {
-                    return Button.primary(
-                      child: Text('Add'),
-                      onPressed: state.canAdd()
-                          ? () {
-                              context.read<AddProjectDialogCubit>().onAdd();
-                              context.pop();
-                            }
-                          : null,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
+              Text('Dir Path'),
+              Row(
+                spacing: Spacing.sm,
+                children: [
+                  Expanded(
+                    child:
+                        BlocBuilder<
+                          AddProjectDialogCubit,
+                          AddProjectDialogState
+                        >(
+                          builder: (context, state) {
+                            return FTextField(
+                              control: FTextFieldControl.managed(
+                                initial: TextEditingValue(text: state.dirPath),
+                                onChange: (textEditingValue) => context
+                                    .read<AddProjectDialogCubit>()
+                                    .onDirPathChanged(textEditingValue.text),
+                              ),
+                            );
+                          },
+                        ),
+                  ),
+                  FButton.icon(
+                    variant: .secondary,
+                    child: const Icon(FLucideIcons.plus),
+                    onPress: () => context
+                        .read<AddProjectDialogCubit>()
+                        .getProjectDir('Select Project Directory'),
+                  ),
+                ],
+              ),
+
+              const Spacer(),
+
+              Row(
+                spacing: Spacing.sm,
+                mainAxisAlignment: .center,
+                children: [
+                  FButton(
+                    variant: .secondary,
+                    onPress: context.pop,
+                    child: Text('Cancel'),
+                  ),
+                  BlocBuilder<AddProjectDialogCubit, AddProjectDialogState>(
+                    builder: (context, state) {
+                      return FButton(
+                        variant: .primary,
+                        child: Text('Add'),
+                        onPress: state.canAdd()
+                            ? () {
+                                context.read<AddProjectDialogCubit>().onAdd();
+                                context.pop();
+                              }
+                            : null,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     ),

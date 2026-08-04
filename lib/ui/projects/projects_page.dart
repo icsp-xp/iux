@@ -1,17 +1,12 @@
-import 'dart:math';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iux/core/extension/context_ext.dart';
+import 'package:forui/forui.dart';
 import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
-import 'package:iux/ui/core/icons/icons.dart';
-import 'package:iux/ui/core/toast/toast.dart';
-import 'package:iux/ui/core/ui/button/button.dart';
+import 'package:iux/ui/core/constants/r_size.dart';
+import 'package:iux/ui/core/constants/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
-import 'package:iux/ui/core/ui/scaffold.dart';
-import 'package:iux/ui/core/ui/text_input.dart';
 import 'package:iux/ui/projects/cubit/projects_cubit.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/add_project_dialog.dart';
@@ -39,40 +34,36 @@ class ProjectsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
-    final typography = theme.typography;
-    final colorScheme = theme.colorScheme;
-    final radius = theme.radiusSize;
-    final spacing = theme.spacing;
+    final theme = FTheme.of(context);
 
-    return Scaffold(
-      leftBar: Container(color: colorScheme.surfaceContainerHigh),
-      leftBarWidth: 200.0,
-      center: Padding(
+    return FScaffold(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          spacing: spacing.medium,
+          spacing: Spacing.sm,
           children: [
             Row(
-              spacing: spacing.smaller,
+              spacing: Spacing.ss,
               children: [
                 // TODO: localize
-                Text('Projects:', style: typography.titleMedium),
+                Text('Projects:', style: theme.typography.body.lg),
                 Expanded(
                   child: Align(
                     alignment: .centerLeft,
                     child: BlocSelector<ProjectsCubit, ProjectsState, String?>(
                       selector: (state) => state.projectsDirPath,
                       builder: (context, projectDir) {
-                        return GhostButton(
-                          onPressed: () => context
+                        return FButton(
+                          variant: .ghost,
+                          mainAxisSize: .min,
+                          onPress: () => context
                               .read<ProjectsCubit>()
                               .chooseProjectDir('Select Project Directory'),
                           child: Text(
                             projectDir ??
                                 'No directory selected', // TODO: localize
                             overflow: .ellipsis,
-                            style: typography.titleSmall.copyWith(
+                            style: theme.typography.body.md.copyWith(
                               decoration: .underline,
                             ),
                           ),
@@ -81,25 +72,26 @@ class ProjectsView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Button.primary(
-                  leading: const Icon(Icons.plus),
+                FButton(
+                  variant: .primary,
+                  prefix: const Icon(FLucideIcons.plus),
                   child: Text('Add Project'),
-                  onPressed: () => showAddProjectDialog(context),
+                  onPress: () => showAddProjectDialog(context),
                 ), // TODO: localize
               ],
             ),
 
             Row(
-              spacing: spacing.smaller,
-              children: [Flexible(child: TextInput(value: 'Search'))],
+              spacing: Spacing.ss,
+              children: [Flexible(child: FTextField(label: Text('Search')))],
             ),
 
             Expanded(
               child: Container(
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.circular(radius.medium),
+                  color: theme.colors.background,
+                  borderRadius: BorderRadius.circular(RSize.md),
                 ),
                 child:
                     BlocSelector<
@@ -119,7 +111,7 @@ class ProjectsView extends StatelessWidget {
                           return ListView.separated(
                             padding: const EdgeInsets.all(16.0),
                             itemCount: projects.length,
-                            separatorBuilder: (_, _) => Gap(spacing.smaller),
+                            separatorBuilder: (_, _) => const Gap(Spacing.ss),
                             itemBuilder: (context, index) {
                               final project = projects[index];
 
@@ -136,7 +128,7 @@ class ProjectsView extends StatelessWidget {
                         failed: (failure) => Center(
                           child: Text(
                             'Unexpected error.',
-                            style: TextStyle(color: colorScheme.error),
+                            style: TextStyle(color: theme.colors.error),
                           ),
                         ),
                       ),

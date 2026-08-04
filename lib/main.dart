@@ -1,18 +1,19 @@
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forui/localizations.dart';
+import 'package:forui/theme.dart';
+import 'package:forui/widgets/toast.dart';
+import 'package:forui/widgets/tooltip.dart';
 import 'package:iux/core/constants.dart';
-import 'package:iux/core/extension/context_ext.dart';
 import 'package:iux/core/talker_bloc_observer.dart';
 import 'package:iux/data/repositories/iux_settings_repository.dart';
 import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/data/services/iux_settings_service.dart';
 import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/routing/router.dart';
-import 'package:iux/ui/core/theme/iux_theme.dart';
-import 'package:iux/ui/core/theme/theme.dart';
-import 'package:iux/ui/core/theme/theme_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:talker/talker.dart';
@@ -38,7 +39,6 @@ void main() async {
   Bloc.observer = TalkerBlocObserver(talker);
 
   final router = IuxRouter();
-  const theme = IuxTheme();
 
   runApp(
     MultiRepositoryProvider(
@@ -48,30 +48,38 @@ void main() async {
         // Use cases
         RepositoryProvider.value(value: getFolderPathUseCase),
       ],
-      child: IuxApp(router: router, theme: theme),
+      child: IuxApp(router: router),
     ),
   );
 }
 
 class IuxApp extends StatelessWidget {
   final IuxRouter router;
-  final Theme theme;
 
-  const IuxApp({required this.theme, required this.router, super.key});
+  const IuxApp({required this.router, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final systemBrightness = MediaQuery.of(context).platformBrightness;
+    final (lightTheme, darkTheme) =
+        const <TargetPlatform>{
+          .android,
+          .iOS,
+          .fuchsia,
+        }.contains(defaultTargetPlatform)
+        ? (FTheme.neutral.light.touch, FTheme.neutral.dark.touch)
+        : (FTheme.neutral.light.desktop, FTheme.neutral.dark.desktop);
 
-    return ThemeProvider(
-      themeData: theme.getThemeData(systemBrightness),
-      child: Builder(
-        builder: (context) {
-          return WidgetsApp.router(
-            color: context.theme.colorScheme.primary,
-            routerConfig: router.config(),
-          );
-        },
+    return MaterialApp.router(
+      localizationsDelegates: const [FLocalizations.delegate],
+
+      theme: lightTheme.toApproximateMaterialTheme(),
+      darkTheme: darkTheme.toApproximateMaterialTheme(),
+
+      routerConfig: router.config(),
+
+      builder: (context, child) => FTheme(
+        data: Theme.brightnessOf(context) == .light ? lightTheme : darkTheme,
+        child: FToaster(child: FTooltipGroup(child: child!)),
       ),
     );
   }
