@@ -14,6 +14,7 @@ import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/data/services/iux_settings_service.dart';
 import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/routing/router.dart';
+import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:talker/talker.dart';
@@ -58,16 +59,25 @@ class IuxApp extends StatelessWidget {
 
   const IuxApp({required this.router, super.key});
 
+  FThemeData _addThemeExtension(FThemeData theme) =>
+      theme.copyWith(extensions: const [Spacing()]);
+
   @override
   Widget build(BuildContext context) {
     final (lightTheme, darkTheme) =
         const <TargetPlatform>{
-          .android,
-          .iOS,
-          .fuchsia,
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+          TargetPlatform.fuchsia,
         }.contains(defaultTargetPlatform)
-        ? (FTheme.neutral.light.touch, FTheme.neutral.dark.touch)
-        : (FTheme.neutral.light.desktop, FTheme.neutral.dark.desktop);
+        ? (
+            _addThemeExtension(FTheme.neutral.light.touch),
+            _addThemeExtension(FTheme.neutral.dark.touch),
+          )
+        : (
+            _addThemeExtension(FTheme.neutral.light.desktop),
+            _addThemeExtension(FTheme.neutral.dark.desktop),
+          );
 
     return MaterialApp.router(
       localizationsDelegates: const [FLocalizations.delegate],

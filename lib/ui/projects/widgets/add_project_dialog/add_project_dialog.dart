@@ -2,12 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
-import 'package:iux/ui/core/constants/spacing.dart';
+import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_cubit.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
 
 void showAddProjectDialog(BuildContext context) {
+  final theme = context.theme;
+
   showFDialog(
     context: context,
     builder: (context, style, animation) => BlocProvider(
@@ -33,11 +35,11 @@ void showAddProjectDialog(BuildContext context) {
                 ),
               ),
 
-              const Gap(Spacing.sm),
+              Gap(theme.spacing.sm),
 
               Text('Dir Path'),
               Row(
-                spacing: Spacing.sm,
+                spacing: theme.spacing.sm,
                 children: [
                   Expanded(
                     child:
@@ -70,7 +72,7 @@ void showAddProjectDialog(BuildContext context) {
               const Spacer(),
 
               Row(
-                spacing: Spacing.sm,
+                spacing: theme.spacing.sm,
                 mainAxisAlignment: .center,
                 children: [
                   FButton(

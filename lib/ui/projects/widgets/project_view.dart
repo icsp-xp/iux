@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
-import 'package:iux/ui/core/constants/spacing.dart';
+import 'package:iux/ui/core/theme/spacing.dart';
 
 class ProjectView extends StatelessWidget {
   final String name;
@@ -17,17 +17,16 @@ class ProjectView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FTheme.of(context);
+    final theme = context.theme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        border: Border(
-          left: BorderSide(color: theme.colors.primary, width: 4.0),
-        ),
+        color: theme.colors.card,
+        borderRadius: theme.style.borderRadius.sm,
       ),
       child: Row(
-        spacing: Spacing.md,
+        spacing: theme.spacing.sm,
         children: [
           Expanded(
             child: Column(
@@ -49,10 +48,10 @@ class ProjectView extends StatelessWidget {
               ],
             ),
           ),
-          FButton(
+          FButton.icon(
             variant: .destructive,
             onPress: onDelete,
-            child: const Text('delete'),
+            child: const Icon(FLucideIcons.trash),
           ),
         ],
       ),

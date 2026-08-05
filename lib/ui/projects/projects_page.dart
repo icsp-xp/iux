@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
-import 'package:iux/ui/core/constants/r_size.dart';
-import 'package:iux/ui/core/constants/spacing.dart';
+import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
 import 'package:iux/ui/projects/cubit/projects_cubit.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
@@ -34,19 +33,19 @@ class ProjectsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FTheme.of(context);
+    final theme = context.theme;
 
     return FScaffold(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          spacing: Spacing.sm,
+          spacing: theme.spacing.xs,
           children: [
             Row(
-              spacing: Spacing.ss,
+              spacing: theme.spacing.xs,
               children: [
                 // TODO: localize
-                Text('Projects:', style: theme.typography.body.lg),
+                Text('Projects:', style: theme.typography.display.lg),
                 Expanded(
                   child: Align(
                     alignment: .centerLeft,
@@ -63,7 +62,7 @@ class ProjectsView extends StatelessWidget {
                             projectDir ??
                                 'No directory selected', // TODO: localize
                             overflow: .ellipsis,
-                            style: theme.typography.body.md.copyWith(
+                            style: theme.typography.display.md.copyWith(
                               decoration: .underline,
                             ),
                           ),
@@ -82,58 +81,51 @@ class ProjectsView extends StatelessWidget {
             ),
 
             Row(
-              spacing: Spacing.ss,
+              spacing: theme.spacing.xs,
               children: [Flexible(child: FTextField(label: Text('Search')))],
             ),
 
             Expanded(
-              child: Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  color: theme.colors.background,
-                  borderRadius: BorderRadius.circular(RSize.md),
-                ),
-                child:
-                    BlocSelector<
-                      ProjectsCubit,
-                      ProjectsState,
-                      RequestStatus<List<Project>>
-                    >(
-                      selector: (state) => state.projects,
-                      builder: (context, projectsStatus) => projectsStatus.when(
-                        idle: () => const SizedBox.expand(),
-                        pending: () => Center(child: Text('loading')),
-                        succeeded: (projects) {
-                          if (projects.isEmpty) {
-                            return const Center(child: Text('Empty'));
-                          }
+              child:
+                  BlocSelector<
+                    ProjectsCubit,
+                    ProjectsState,
+                    RequestStatus<List<Project>>
+                  >(
+                    selector: (state) => state.projects,
+                    builder: (context, projectsStatus) => projectsStatus.when(
+                      idle: () => const SizedBox.expand(),
+                      pending: () => Center(child: Text('loading')),
+                      succeeded: (projects) {
+                        if (projects.isEmpty) {
+                          return const Center(child: Text('Empty'));
+                        }
 
-                          return ListView.separated(
-                            padding: const EdgeInsets.all(16.0),
-                            itemCount: projects.length,
-                            separatorBuilder: (_, _) => const Gap(Spacing.ss),
-                            itemBuilder: (context, index) {
-                              final project = projects[index];
+                        return ListView.separated(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          itemCount: projects.length,
+                          separatorBuilder: (_, _) => Gap(theme.spacing.xs),
+                          itemBuilder: (context, index) {
+                            final project = projects[index];
 
-                              return ProjectView(
-                                name: project.name,
-                                path: project.dirPath,
-                                onDelete: () => context
-                                    .read<ProjectsCubit>()
-                                    .delete(project.dirPath),
-                              );
-                            },
-                          );
-                        },
-                        failed: (failure) => Center(
-                          child: Text(
-                            'Unexpected error.',
-                            style: TextStyle(color: theme.colors.error),
-                          ),
+                            return ProjectView(
+                              name: project.name,
+                              path: project.dirPath,
+                              onDelete: () => context
+                                  .read<ProjectsCubit>()
+                                  .delete(project.dirPath),
+                            );
+                          },
+                        );
+                      },
+                      failed: (failure) => Center(
+                        child: Text(
+                          'Unexpected error.',
+                          style: TextStyle(color: theme.colors.error),
                         ),
                       ),
                     ),
-              ),
+                  ),
             ),
           ],
         ),
