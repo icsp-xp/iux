@@ -49,8 +49,8 @@ void showAddProjectDialog(BuildContext context) {
                         >(
                           builder: (context, state) {
                             return FTextField(
-                              control: FTextFieldControl.managed(
-                                initial: TextEditingValue(text: state.dirPath),
+                              control: FTextFieldControl.lifted(
+                                value: TextEditingValue(text: state.dirPath),
                                 onChange: (textEditingValue) => context
                                     .read<AddProjectDialogCubit>()
                                     .onDirPathChanged(textEditingValue.text),
