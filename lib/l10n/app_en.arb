@@ -1,8 +1,15 @@
 {
     "@@locale": "en",
-
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-        "description": "The conventional newborn programmer greeting"
+    "actionContinue": "Continue",
+    "@actionContinue": {
+        "description": "Button label to proceed to the next step"
+    },
+    "actionBack": "Back",
+    "@actionBack": {
+        "description": "Button label to navigate back to the previous screen"
+    },
+    "actionCancel": "Cancel",
+    "@actionCancel": {
+        "description": "Button label to close a dialog or cancel the current action"
     }
 }
