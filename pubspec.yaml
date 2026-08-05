@@ -13,9 +13,12 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_localizations:
+    sdk: flutter
   forui: ^0.25.0
   fpdart: ^1.2.0
   freezed_annotation: ^3.1.0
+  intl: any
   json_annotation: ^4.12.0
   path: ^1.9.1
   path_provider: ^2.1.5
@@ -37,3 +40,4 @@ dev_dependencies:
 
 flutter:
   uses-material-design: false
+  generate: true

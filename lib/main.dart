@@ -19,6 +19,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:talker/talker.dart';
 
+import 'l10n/app_localizations.dart';
+
 final talker = Talker();
 
 void main() async {
@@ -80,7 +82,11 @@ class IuxApp extends StatelessWidget {
           );
 
     return MaterialApp.router(
-      localizationsDelegates: const [FLocalizations.delegate],
+      localizationsDelegates: const [
+        FLocalizations.delegate,
+        ...AppLocalizations.localizationsDelegates,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
 
       theme: lightTheme.toApproximateMaterialTheme(),
       darkTheme: darkTheme.toApproximateMaterialTheme(),
