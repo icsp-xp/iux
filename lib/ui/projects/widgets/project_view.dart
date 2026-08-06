@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
+import 'package:iux/core/extension/build_context_ext.dart';
 import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:iux/ui/core/ui/confirm_dialog.dart';
 
@@ -55,9 +56,8 @@ class ProjectView extends StatelessWidget {
             onPress: () async {
               final bool? canDelete = await showConfirmDialog<bool>(
                 context: context,
-                title: 'Delete Project?', // TODO: localize
-                description:
-                    'This action cannot be undone. This will permanently delete this project from your computer.', // TODO: localize
+                title: context.l10n.deleteThisProjectTitle,
+                description: context.l10n.deleteThisProjectDescription,
                 onConfirm: () => context.pop(true),
                 onDismiss: () => context.pop(false),
               );

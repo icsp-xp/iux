@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
+import 'package:iux/core/extension/build_context_ext.dart';
 import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_cubit.dart';
@@ -26,9 +27,9 @@ void showAddProjectDialog(BuildContext context) {
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              Text('Name'),
               FTextField(
-                control: FTextFieldControl.managed(
+                label: Text(context.l10n.projectNameLabel),
+                control: .managed(
                   onChange: (textEditingValue) => context
                       .read<AddProjectDialogCubit>()
                       .onNameChanged(textEditingValue.text),
@@ -37,8 +38,8 @@ void showAddProjectDialog(BuildContext context) {
 
               Gap(theme.spacing.sm),
 
-              Text('Dir Path'),
               Row(
+                crossAxisAlignment: .end,
                 spacing: theme.spacing.sm,
                 children: [
                   Expanded(
@@ -49,8 +50,14 @@ void showAddProjectDialog(BuildContext context) {
                         >(
                           builder: (context, state) {
                             return FTextField(
-                              control: FTextFieldControl.lifted(
-                                value: TextEditingValue(text: state.dirPath),
+                              label: Text(context.l10n.projectDirPathLabel),
+                              control: .lifted(
+                                value: TextEditingValue(
+                                  text: state.dirPath,
+                                  selection: .collapsed(
+                                    offset: state.dirPath.length,
+                                  ),
+                                ),
                                 onChange: (textEditingValue) => context
                                     .read<AddProjectDialogCubit>()
                                     .onDirPathChanged(textEditingValue.text),
@@ -64,7 +71,7 @@ void showAddProjectDialog(BuildContext context) {
                     child: const Icon(FLucideIcons.plus),
                     onPress: () => context
                         .read<AddProjectDialogCubit>()
-                        .getProjectDir('Select Project Directory'),
+                        .getProjectDir(context.l10n.selectProjectDirectory),
                   ),
                 ],
               ),
@@ -78,19 +85,19 @@ void showAddProjectDialog(BuildContext context) {
                   FButton(
                     variant: .secondary,
                     onPress: context.pop,
-                    child: Text('Cancel'),
+                    child: Text(context.l10n.actionCancel),
                   ),
                   BlocBuilder<AddProjectDialogCubit, AddProjectDialogState>(
                     builder: (context, state) {
                       return FButton(
                         variant: .primary,
-                        child: Text('Add'),
                         onPress: state.canAdd()
                             ? () {
                                 context.read<AddProjectDialogCubit>().onAdd();
                                 context.pop();
                               }
                             : null,
+                        child: Text(context.l10n.actionAdd),
                       );
                     },
                   ),

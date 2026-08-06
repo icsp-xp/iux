@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
+import 'package:iux/core/extension/build_context_ext.dart';
+import 'package:iux/core/extension/failure_ext.dart';
 import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
 import 'package:iux/ui/core/theme/spacing.dart';
@@ -37,15 +39,17 @@ class ProjectsView extends StatelessWidget {
 
     return FScaffold(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const .all(16.0),
         child: Column(
           spacing: theme.spacing.xs,
           children: [
             Row(
               spacing: theme.spacing.xs,
               children: [
-                // TODO: localize
-                Text('Projects:', style: theme.typography.display.lg),
+                Text(
+                  context.l10n.projectsListTitle,
+                  style: theme.typography.display.lg,
+                ),
                 Expanded(
                   child: Align(
                     alignment: .centerLeft,
@@ -55,12 +59,12 @@ class ProjectsView extends StatelessWidget {
                         return FButton(
                           variant: .ghost,
                           mainAxisSize: .min,
-                          onPress: () => context
-                              .read<ProjectsCubit>()
-                              .chooseProjectDir('Select Project Directory'),
+                          onPress: () =>
+                              context.read<ProjectsCubit>().chooseProjectDir(
+                                context.l10n.selectProjectDirectory,
+                              ),
                           child: Text(
-                            projectDir ??
-                                'No directory selected', // TODO: localize
+                            projectDir ?? context.l10n.noDirectorySelected,
                             overflow: .ellipsis,
                             style: theme.typography.display.md.copyWith(
                               decoration: .underline,
@@ -74,15 +78,25 @@ class ProjectsView extends StatelessWidget {
                 FButton(
                   variant: .primary,
                   prefix: const Icon(FLucideIcons.plus),
-                  child: Text('Add Project'),
+                  child: Text(context.l10n.actionAddProject),
                   onPress: () => showAddProjectDialog(context),
-                ), // TODO: localize
+                ),
               ],
             ),
 
             Row(
               spacing: theme.spacing.xs,
-              children: [Flexible(child: FTextField(label: Text('Search')))],
+              children: [
+                Flexible(
+                  child: FTextField(
+                    prefixBuilder: (_, _, _) => const Padding(
+                      padding: .all(10),
+                      child: Icon(FLucideIcons.search),
+                    ),
+                    hint: context.l10n.searchProjectsBarPlaceholder,
+                  ),
+                ),
+              ],
             ),
 
             Expanded(
@@ -95,14 +109,16 @@ class ProjectsView extends StatelessWidget {
                     selector: (state) => state.projects,
                     builder: (context, projectsStatus) => projectsStatus.when(
                       idle: () => const SizedBox.expand(),
-                      pending: () => Center(child: Text('loading')),
+                      pending: () => const Center(child: FCircularProgress()),
                       succeeded: (projects) {
                         if (projects.isEmpty) {
-                          return const Center(child: Text('Empty'));
+                          return Center(
+                            child: Text(context.l10n.emptyProjectsListLabel),
+                          );
                         }
 
                         return ListView.separated(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          padding: const .symmetric(vertical: 16.0),
                           itemCount: projects.length,
                           separatorBuilder: (_, _) => Gap(theme.spacing.xs),
                           itemBuilder: (context, index) {
@@ -120,7 +136,7 @@ class ProjectsView extends StatelessWidget {
                       },
                       failed: (failure) => Center(
                         child: Text(
-                          'Unexpected error.',
+                          failure.localize(context),
                           style: TextStyle(color: theme.colors.error),
                         ),
                       ),
