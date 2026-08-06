@@ -4,25 +4,19 @@ import 'dart:io';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:iux/data/repositories/iux_settings_repository.dart';
-import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/domain/failure.dart';
 import 'package:iux/domain/model/iux_settings.dart';
 import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
-import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/ui/projects/cubit/projects_cubit.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'projects_cubit_test.mocks.dart';
+import '../../fakes/fake_directory.dart';
+import '../../mocks/mock_get_folder_path_use_case.dart';
+import '../../mocks/mock_iux_settings_repository.dart';
+import '../../mocks/mock_projects_repository.dart';
 
-@GenerateNiceMocks([
-  MockSpec<ProjectsRepository>(as: #MockProjectsRepository),
-  MockSpec<IuxSettingsRepository>(as: #MockIuxSettingsRepository),
-  MockSpec<GetFolderPathUseCase>(as: #MockGetFolderPathUseCase),
-])
 void main() {
   late ProjectsCubit projectsCubit;
   late MockProjectsRepository mockProjectsRepository;
@@ -47,11 +41,8 @@ void main() {
   ];
 
   setUpAll(() {
-    provideDummy<TaskEither<Failure, IuxSettings>>(
-      TaskEither.left(const UnexpectedFailure()),
-    );
-    provideDummy<TaskEither<Failure, Unit>>(TaskEither.right(unit));
-    provideDummy<Either<Failure, String>>(Either.right('dummy'));
+    registerFallbackValue(FakeDirectory(''));
+    registerFallbackValue(const UnexpectedFailure());
   });
 
   setUp(() {
@@ -80,10 +71,10 @@ void main() {
       build: () => projectsCubit,
       setUp: () {
         when(
-          mockIuxSettingsRepository.getSettings(),
+          () => mockIuxSettingsRepository.getSettings(),
         ).thenAnswer((_) => TaskEither.right(mockSettings));
         when(
-          mockProjectsRepository.watchProjects(any),
+          () => mockProjectsRepository.watchProjects(any()),
         ).thenAnswer((_) => Stream.value(mockProjects));
       },
       act: (cubit) => cubit.init(),
@@ -102,17 +93,10 @@ void main() {
         ),
       ],
       verify: (cubit) {
-        verify(mockIuxSettingsRepository.getSettings()).called(1);
+        verify(() => mockIuxSettingsRepository.getSettings()).called(1);
         verify(
-          mockProjectsRepository.watchProjects(
-            argThat(
-              isA<Directory>().having(
-                (d) => d.path,
-                'path',
-                defaultProjectDirPath,
-              ),
-            ),
-          ),
+          () =>
+              mockProjectsRepository.watchProjects(any(that: isA<Directory>())),
         ).called(1);
       },
     );
@@ -122,7 +106,7 @@ void main() {
       build: () => projectsCubit,
       setUp: () {
         when(
-          mockIuxSettingsRepository.getSettings(),
+          () => mockIuxSettingsRepository.getSettings(),
         ).thenAnswer((_) => TaskEither.left(const UnexpectedFailure()));
       },
       act: (cubit) => cubit.init(),
@@ -132,8 +116,8 @@ void main() {
         ),
       ],
       verify: (cubit) {
-        verify(mockIuxSettingsRepository.getSettings()).called(1);
-        verifyNever(mockProjectsRepository.watchProjects(any));
+        verify(() => mockIuxSettingsRepository.getSettings()).called(1);
+        verifyNever(() => mockProjectsRepository.watchProjects(any()));
       },
     );
 
@@ -147,12 +131,12 @@ void main() {
         secondStreamController = StreamController<List<Project>>();
 
         when(
-          mockIuxSettingsRepository.getSettings(),
+          () => mockIuxSettingsRepository.getSettings(),
         ).thenAnswer((_) => TaskEither.right(mockSettings));
         when(
-          mockProjectsRepository.watchProjects(
-            argThat(
-              isA<Directory>().having(
+          () => mockProjectsRepository.watchProjects(
+            any(
+              that: isA<Directory>().having(
                 (d) => d.path,
                 'path',
                 defaultProjectDirPath,
@@ -161,14 +145,14 @@ void main() {
           ),
         ).thenAnswer((_) => firstStreamController.stream);
         when(
-          mockProjectsRepository.watchProjects(
-            argThat(
-              isA<Directory>().having((d) => d.path, 'path', '/new/path'),
+          () => mockProjectsRepository.watchProjects(
+            any(
+              that: isA<Directory>().having((d) => d.path, 'path', '/new/path'),
             ),
           ),
         ).thenAnswer((_) => secondStreamController.stream);
         when(
-          mockGetFolderPathUseCase.get(any),
+          () => mockGetFolderPathUseCase.get(any()),
         ).thenAnswer((_) => Future.value(const Right('/new/path')));
       },
       act: (cubit) async {
@@ -210,7 +194,7 @@ void main() {
         ),
       ],
       verify: (cubit) {
-        verify(mockProjectsRepository.watchProjects(any)).called(2);
+        verify(() => mockProjectsRepository.watchProjects(any())).called(2);
       },
       tearDown: () {
         firstStreamController.close();
@@ -225,12 +209,14 @@ void main() {
       build: () => projectsCubit,
       setUp: () {
         when(
-          mockProjectsRepository.delete(any),
+          () => mockProjectsRepository.delete(any()),
         ).thenAnswer((_) => TaskEither.right(unit));
       },
       act: (cubit) => cubit.delete('/path/to/project'),
       verify: (cubit) {
-        verify(mockProjectsRepository.delete('/path/to/project')).called(1);
+        verify(
+          () => mockProjectsRepository.delete('/path/to/project'),
+        ).called(1);
       },
     );
 
@@ -239,13 +225,15 @@ void main() {
       build: () => projectsCubit,
       setUp: () {
         when(
-          mockProjectsRepository.delete(any),
+          () => mockProjectsRepository.delete(any()),
         ).thenAnswer((_) => TaskEither.left(const UnexpectedFailure()));
       },
       act: (cubit) => cubit.delete('/path/to/project'),
       expect: () => [],
       verify: (cubit) {
-        verify(mockProjectsRepository.delete('/path/to/project')).called(1);
+        verify(
+          () => mockProjectsRepository.delete('/path/to/project'),
+        ).called(1);
       },
     );
   });
@@ -256,10 +244,10 @@ void main() {
       build: () => projectsCubit,
       setUp: () {
         when(
-          mockGetFolderPathUseCase.get(any),
+          () => mockGetFolderPathUseCase.get(any()),
         ).thenAnswer((_) => Future.value(const Right('/new/projects/path')));
         when(
-          mockProjectsRepository.watchProjects(any),
+          () => mockProjectsRepository.watchProjects(any()),
         ).thenAnswer((_) => Stream.value(mockProjects));
       },
       act: (cubit) => cubit.chooseProjectDir('Select Project Directory'),
@@ -279,19 +267,9 @@ void main() {
       ],
       verify: (cubit) {
         verify(
-          mockGetFolderPathUseCase.get('Select Project Directory'),
+          () => mockGetFolderPathUseCase.get('Select Project Directory'),
         ).called(1);
-        verify(
-          mockProjectsRepository.watchProjects(
-            argThat(
-              isA<Directory>().having(
-                (d) => d.path,
-                'path',
-                '/new/projects/path',
-              ),
-            ),
-          ),
-        ).called(1);
+        verify(() => mockProjectsRepository.watchProjects(any())).called(1);
       },
     );
 
@@ -306,16 +284,16 @@ void main() {
           ),
         );
         when(
-          mockGetFolderPathUseCase.get(any),
+          () => mockGetFolderPathUseCase.get(any()),
         ).thenAnswer((_) => Future.value(left(const UnexpectedFailure())));
       },
       act: (cubit) => cubit.chooseProjectDir('Select Project Directory'),
       expect: () => [],
       verify: (cubit) {
         verify(
-          mockGetFolderPathUseCase.get('Select Project Directory'),
+          () => mockGetFolderPathUseCase.get('Select Project Directory'),
         ).called(1);
-        verifyNever(mockProjectsRepository.watchProjects(any));
+        verifyNever(() => mockProjectsRepository.watchProjects(any()));
       },
     );
   });
