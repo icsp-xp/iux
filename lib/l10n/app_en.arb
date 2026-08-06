@@ -75,5 +75,13 @@
     "errorUnsupportedOS": "This feature is not supported on your operating system.",
     "@errorUnsupportedOS": {
         "description": "Error message when feature is not available on current OS"
+    },
+    "failedToChooseProjectDir": "Failed to choose the project directory.",
+    "@failedToChooseProjectDir": {
+        "description": "Error message displayed when the user fails to choose a project directory."
+    },
+    "failedToCreateProject": "Failed to create the project.",
+    "@failedToCreateProject": {
+        "description": "Error message displayed when project creation fails."
     }
 }

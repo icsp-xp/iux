@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
@@ -8,8 +9,10 @@ import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
 import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
+import 'package:iux/ui/core/ui/show_toast.dart';
 import 'package:iux/ui/projects/cubit/projects_cubit.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
+import 'package:iux/ui/projects/projects_ui_event.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/add_project_dialog.dart';
 import 'package:iux/ui/projects/widgets/project_view.dart';
 
@@ -25,7 +28,20 @@ class ProjectsPage extends StatelessWidget {
         iuxSettingsRepository: context.read(),
         getFolderPathUseCase: context.read(),
       )..init(),
-      child: const ProjectsView(),
+      child: BlocPresentationListener<ProjectsCubit, ProjectsUiEvent>(
+        listener: (context, event) {
+          switch (event) {
+            case FailedToChooseProjectDir():
+              showErrorToast(
+                context: context,
+                errorMsg: context.l10n.failedToChooseProjectDir,
+              );
+            default:
+              break;
+          }
+        },
+        child: const ProjectsView(),
+      ),
     );
   }
 }

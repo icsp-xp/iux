@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iux/data/repositories/iux_settings_repository.dart';
 import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/domain/request_status.dart';
 import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
+import 'package:iux/ui/projects/projects_ui_event.dart';
 
-final class ProjectsCubit extends Cubit<ProjectsState> {
+final class ProjectsCubit extends Cubit<ProjectsState>
+    with BlocPresentationMixin<ProjectsState, ProjectsUiEvent> {
   final ProjectsRepository _projectsRepository;
   final IuxSettingsRepository _iuxSettingsRepository;
   final GetFolderPathUseCase _getFolderPathUseCase;
@@ -53,7 +56,7 @@ final class ProjectsCubit extends Cubit<ProjectsState> {
   Future<void> chooseProjectDir(final String dialogTitle) async {
     final result = await _getFolderPathUseCase.get(dialogTitle);
     result.fold(
-      (_) {}, // TODO: show snackbar message
+      (failure) => emitPresentation(const FailedToChooseProjectDir()),
       (path) {
         emit(state.copyWith(projectsDirPath: path));
         _watchProjects(path);

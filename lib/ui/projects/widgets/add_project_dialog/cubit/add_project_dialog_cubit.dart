@@ -1,11 +1,14 @@
+import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iux/data/repositories/iux_settings_repository.dart';
 import 'package:iux/data/repositories/projects_repository.dart';
 import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/domain/validators/path_validator.dart';
+import 'package:iux/ui/projects/projects_ui_event.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
 
-final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
+final class AddProjectDialogCubit extends Cubit<AddProjectDialogState>
+    with BlocPresentationMixin<AddProjectDialogState, ProjectsUiEvent> {
   final ProjectsRepository _projectsRepository;
   final IuxSettingsRepository _iuxSettingsRepository;
   final GetFolderPathUseCase _getFolderPathUseCase;
@@ -32,17 +35,12 @@ final class AddProjectDialogCubit extends Cubit<AddProjectDialogState> {
 
     emit(state.copyWith(isAdding: true));
     final result = await _projectsRepository
-        .create(state.name, state.dirPath) // TODO:
+        .create(state.name, state.dirPath)
         .run();
 
-    result.fold(
-      (failure) {
-        // TODO: handle failure
-      },
-      (_) {
-        /* empty */
-      },
-    );
+    result.fold((_) => emitPresentation(const FailedToCreateTheProject()), (_) {
+      /* empty */
+    });
 
     emit(state.copyWith(isAdding: false));
   }

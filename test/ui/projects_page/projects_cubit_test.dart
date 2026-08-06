@@ -10,6 +10,7 @@ import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
 import 'package:iux/ui/projects/cubit/projects_cubit.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
+import 'package:iux/ui/projects/projects_ui_event.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../fakes/fake_directory.dart';
@@ -274,7 +275,7 @@ void main() {
     );
 
     blocTest<ProjectsCubit, ProjectsState>(
-      'does nothing when user cancels directory selection',
+      'emit FailedToChooseProjectDir presentation event on directory selection error',
       build: () => projectsCubit,
       setUp: () {
         projectsCubit.emit(
@@ -285,9 +286,16 @@ void main() {
         );
         when(
           () => mockGetFolderPathUseCase.get(any()),
-        ).thenAnswer((_) => Future.value(left(const UnexpectedFailure())));
+        ).thenAnswer((_) => Future.value(left(const InvalidDataFailure())));
       },
-      act: (cubit) => cubit.chooseProjectDir('Select Project Directory'),
+      act: (cubit) async {
+        expectLater(
+          cubit.presentation,
+          emits(const FailedToChooseProjectDir()),
+        );
+
+        await cubit.chooseProjectDir('Select Project Directory');
+      },
       expect: () => [],
       verify: (cubit) {
         verify(

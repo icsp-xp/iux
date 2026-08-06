@@ -5,6 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:iux/core/supported_target_platform.dart';
 import 'package:iux/domain/failure.dart';
 import 'package:iux/domain/model/iux_settings.dart';
+import 'package:iux/ui/projects/projects_ui_event.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_cubit.dart';
 import 'package:iux/ui/projects/widgets/add_project_dialog/cubit/add_project_dialog_state.dart';
 import 'package:mocktail/mocktail.dart';
@@ -287,7 +288,7 @@ void main() {
     );
 
     blocTest<AddProjectDialogCubit, AddProjectDialogState>(
-      'emits isAdding true then false when repository creation fails',
+      'emits isAdding true then false and emit FailedToCreateTheProject presentation event when repository creation fails',
       build: () => cubit,
       seed: () => const AddProjectDialogState(
         name: validName,
@@ -299,7 +300,14 @@ void main() {
           () => mockProjectsRepository.create(validName, validDirPath),
         ).thenAnswer((_) => TaskEither.left(const UnexpectedFailure()));
       },
-      act: (cubit) => cubit.onAdd(),
+      act: (cubit) {
+        expectLater(
+          cubit.presentation,
+          emits(const FailedToCreateTheProject()),
+        );
+
+        cubit.onAdd();
+      },
       expect: () => [
         const AddProjectDialogState(
           name: validName,
