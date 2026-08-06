@@ -5,7 +5,7 @@ import 'package:iux/domain/failure.dart';
 import 'package:iux/domain/validators/path_validator.dart';
 
 class GetFolderPathUseCase {
-  Future<Either<Failure, String>> get([String? dialogTitle]) {
+  Future<Either<Failure, String>> get([final String? dialogTitle]) {
     return TaskEither.tryCatch(
           () => FilePicker.getDirectoryPath(dialogTitle: dialogTitle),
           (error, stackTrace) =>

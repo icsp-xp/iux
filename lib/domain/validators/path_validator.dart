@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:iux/core/extension/string_ext.dart';
+import 'package:iux/core/supported_target_platform.dart';
 import 'package:iux/domain/error_handler.dart';
 import 'package:iux/domain/failure.dart';
 
@@ -17,19 +18,17 @@ abstract final class PathValidator {
         return false;
       }
 
-      switch (defaultTargetPlatform) {
-        case TargetPlatform.linux:
-        case TargetPlatform.macOS:
-          return _linuxMacPath.hasMatch(path);
-
-        case TargetPlatform.windows:
-          return _windowsPath.hasMatch(path);
-
-        default:
-          throw const UnsupportedOs();
-      }
+      return STP.whenOrElse<bool>(
+        linux: () => _linuxMacPath.hasMatch(path),
+        macOs: () => _linuxMacPath.hasMatch(path),
+        windows: () => _windowsPath.hasMatch(path),
+        orElse: () => throw const UnsupportedOs(),
+      );
     },
-    (error, stackTrace) =>
-        ErrorHandler.handle(error, stackTrace, 'On check path validity'),
+    (error, stackTrace) => ErrorHandler.handle(
+      error,
+      stackTrace,
+      'On check path validity on $defaultTargetPlatform system',
+    ),
   );
 }
