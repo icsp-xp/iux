@@ -2,7 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/widgets.dart';
 
+{{#is_cubit}}
+import './cubit/{{page_name.snakeCase()}}_cubit.dart';
+{{/is_cubit}}
+{{#is_bloc}}
 import './bloc/{{page_name.snakeCase()}}_bloc.dart';
+{{/is_bloc}}
 
 @RoutePage()
 class {{page_name.pascalCase()}}Page extends StatelessWidget {
@@ -11,7 +16,7 @@ class {{page_name.pascalCase()}}Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => {{page_name.pascalCase()}}Bloc(), 
+      create: (context) => {{#is_cubit}}{{page_name.pascalCase()}}Cubit(){{/is_cubit}}{{#is_bloc}}{{page_name.pascalCase()}}Bloc(){{/is_bloc}},
       child: const {{page_name.pascalCase()}}View()
     );
   }

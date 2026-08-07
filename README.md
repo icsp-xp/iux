@@ -40,7 +40,7 @@ fvm dart run mason_cli:mason "$@"
 ### Bricks
 Brick creation should be invoked inside the `mason` folder.
 #### Brick: `page`
-Generates a complete new page, including the UI, **BLoC** state management (`freezed`), and navigation configuration (`auto_route`).\
+Generates a complete new page, including the UI, **Cubit** or **BLoC** state management (`freezed`), and navigation configuration (`auto_route`).\
 **Note:** Remember to register the new route in the router.
 
 **Usage**
@@ -50,8 +50,20 @@ fvm_mason make page -o ../lib/ui
 
 **Prompts**
 - `page_name`: The name of the page (e.g., *user profile*, *home*) — naming conventions are handled automatically
+- `state_management`: The state management architecture (`cubit` [default] or `bloc`)
 
 **Generated Structure**
+
+*When choosing **Cubit** (default):*
+```plaintext
+{{page_name.snakeCase()}}/
+├── cubit/
+│   ├── {{page_name.snakeCase()}}_cubit.dart
+│   └── {{page_name.snakeCase()}}_state.dart
+└── {{page_name.snakeCase()}}_page.dart
+```
+
+*When choosing **BLoC**:*
 ```plaintext
 {{page_name.snakeCase()}}/
 ├── bloc/

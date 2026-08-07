@@ -10,4 +10,13 @@ vars:
   page_name:
     type: string
     description: the name of the page
-    prompt: Insert the page name
+    prompt: "Insert the page name:"
+
+  state_management:
+    type: enum
+    description: Determines the type of state management used by the screen
+    prompt: Which state management approach do you want to use?
+    default: cubit
+    values:
+      - cubit
+      - bloc
