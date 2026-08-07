@@ -1,0 +1,26 @@
+# This GitHub Actions workflow automates the testing process whenever code is pushed or
+# a pull request is submitted targeting the main or dev branches.
+#
+# It relies on third-party community actions. Specifically, it utilizes
+# 'subosito/flutter-action' (available at https://github.com/subosito/flutter-action)
+# to install and configure the Flutter environment from the .fvmrc file.
+
+name: Tests
+
+on:
+  push:
+    branches: ["main", "dev"]
+  pull_request:
+    branches: ["main", "dev"]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+      - run: flutter pub get
+      - run: dart run build_runner build
+      - run: flutter test
