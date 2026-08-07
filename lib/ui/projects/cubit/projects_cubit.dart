@@ -1,0 +1,91 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:bloc_presentation/bloc_presentation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iux/data/repositories/iux_settings_repository.dart';
+import 'package:iux/data/repositories/projects_repository.dart';
+import 'package:iux/domain/model/project.dart';
+import 'package:iux/domain/request_status.dart';
+import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
+import 'package:iux/ui/projects/cubit/projects_state.dart';
+import 'package:iux/ui/projects/projects_ui_event.dart';
+
+final class ProjectsCubit extends Cubit<ProjectsState>
+    with BlocPresentationMixin<ProjectsState, ProjectsUiEvent> {
+  final ProjectsRepository _projectsRepository;
+  final IuxSettingsRepository _iuxSettingsRepository;
+  final GetFolderPathUseCase _getFolderPathUseCase;
+
+  StreamSubscription? _projectsSubscription;
+  List<Project> _unfilteredProjects = [];
+
+  ProjectsCubit({
+    required this._projectsRepository,
+    required this._iuxSettingsRepository,
+    required this._getFolderPathUseCase,
+  }) : super(const ProjectsState());
+
+  Future<void> init() async {
+    final settings = await _iuxSettingsRepository.getSettings().run();
+    settings.fold(
+      (failure) =>
+          emit(state.copyWith(projects: RequestStatus.failed(failure))),
+      (settings) {
+        emit(state.copyWith(projectsDirPath: settings.defaultProjectDirPath));
+        _watchProjects(settings.defaultProjectDirPath);
+      },
+    );
+  }
+
+  Future<void> _watchProjects(final String folderPath) async {
+    _projectsSubscription?.cancel();
+
+    emit(state.copyWith(projects: const RequestStatus.pending()));
+
+    _projectsSubscription = _projectsRepository
+        .watchProjects(Directory(folderPath))
+        .listen((projects) {
+          // Safe to store the original reference: [onSearch] filters via
+          // [where().toList()], creating a separate list. If future
+          // operations might mutate or share this reference, consider
+          // copying with [...projects].  
+          _unfilteredProjects = projects;
+          emit(state.copyWith(projects: RequestStatus.succeeded(projects)));
+        });
+  }
+
+  Future<void> delete(final String projectDirPath) async {
+    await _projectsRepository.delete(projectDirPath).run();
+  }
+
+  Future<void> chooseProjectDir(final String dialogTitle) async {
+    final result = await _getFolderPathUseCase.get(dialogTitle);
+    result.fold(
+      (failure) => emitPresentation(const FailedToChooseProjectDir()),
+      (path) {
+        emit(state.copyWith(projectsDirPath: path));
+        _watchProjects(path);
+      },
+    );
+  }
+
+  void onSearch(final String value) {
+    if (value.isNotEmpty) {
+      final filtered = _unfilteredProjects
+          .where(
+            (p) => p.name.toLowerCase().contains(value.trim().toLowerCase()),
+          )
+          .toList();
+      emit(state.copyWith(projects: RequestSucceeded(filtered)));
+    } else {
+      emit(state.copyWith(projects: RequestSucceeded(_unfilteredProjects)));
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _projectsSubscription?.cancel();
+    return super.close();
+  }
+}

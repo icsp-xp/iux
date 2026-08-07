@@ -25,6 +25,18 @@ static void my_application_activate(GApplication* application) {
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
 
+  // Set minimum windows size
+  GdkGeometry geometry;
+  geometry.min_width = 800;
+  geometry.min_height = 600;
+
+  gtk_window_set_geometry_hints(
+      window, 
+      nullptr, 
+      &geometry, 
+      GDK_HINT_MIN_SIZE
+  );
+
   // Use a header bar when running in GNOME as this is the common style used
   // by applications and is the setup most users will be using (e.g. Ubuntu
   // desktop).
