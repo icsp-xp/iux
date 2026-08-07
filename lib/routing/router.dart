@@ -10,6 +10,7 @@ class IuxRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(page: ProjectsRoute.page, initial: true)
+    AutoRoute(page: ProjectsRoute.page, initial: true),
+    AutoRoute(page: WorkspaceRoute.page),
   ];
 }
