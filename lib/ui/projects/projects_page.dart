@@ -101,12 +101,16 @@ class ProjectsView extends StatelessWidget {
             ),
 
             Gap(theme.spacing.sm),
-            
+
             Row(
               spacing: theme.spacing.xs,
               children: [
                 Flexible(
                   child: FTextField(
+                    control: .managed(
+                      onChange: (value) =>
+                          context.read<ProjectsCubit>().onSearch(value.text),
+                    ),
                     prefixBuilder: (_, _, _) => const Padding(
                       padding: .all(10),
                       child: Icon(FLucideIcons.search),

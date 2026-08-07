@@ -42,10 +42,6 @@ void main() {
     );
   });
 
-  tearDown(() async {
-    await cubit.close();
-  });
-
   group('AddProjectDialogCubit initialization', () {
     test('initial state is correct', () {
       expect(cubit.state, const AddProjectDialogState());

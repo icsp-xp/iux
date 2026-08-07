@@ -58,10 +58,6 @@ void main() {
     );
   });
 
-  tearDown(() async {
-    await projectsCubit.close();
-  });
-
   group('ProjectsCubit initialization', () {
     test('initial state is correct', () {
       expect(projectsCubit.state, const ProjectsState());
@@ -303,6 +299,100 @@ void main() {
         ).called(1);
         verifyNever(() => mockProjectsRepository.watchProjects(any()));
       },
+    );
+  });
+
+  group('On search projects', () {
+    setUp(() async {
+      when(
+        () => mockIuxSettingsRepository.getSettings(),
+      ).thenAnswer((_) => TaskEither.right(mockSettings));
+      when(
+        () => mockProjectsRepository.watchProjects(any()),
+      ).thenAnswer((_) => Stream.value(mockProjects));
+
+      await projectsCubit.init();
+      await pumpEventQueue();
+    });
+
+    blocTest<ProjectsCubit, ProjectsState>(
+      'filters projects by name when search value is not empty',
+      build: () => projectsCubit,
+      act: (cubit) => cubit.onSearch('Project 1'),
+      expect: () => [
+        ProjectsState(
+          projectsDirPath: defaultProjectDirPath,
+          projects: RequestStatus.succeeded([mockProjects[0]]),
+        ),
+      ],
+    );
+
+    blocTest<ProjectsCubit, ProjectsState>(
+      'search is case-insensitive',
+      build: () => projectsCubit,
+      act: (cubit) => cubit.onSearch('PROJECT 2'),
+      expect: () => [
+        ProjectsState(
+          projectsDirPath: defaultProjectDirPath,
+          projects: RequestStatus.succeeded([mockProjects[1]]),
+        ),
+      ],
+    );
+
+    blocTest<ProjectsCubit, ProjectsState>(
+      'trims whitespace from search value',
+      build: () => projectsCubit,
+      act: (cubit) => cubit.onSearch('  Project 1  '),
+      expect: () => [
+        ProjectsState(
+          projectsDirPath: defaultProjectDirPath,
+          projects: RequestStatus.succeeded([mockProjects[0]]),
+        ),
+      ],
+    );
+
+    blocTest<ProjectsCubit, ProjectsState>(
+      'returns empty list when no projects match search',
+      build: () => projectsCubit,
+      act: (cubit) => cubit.onSearch('Nonexistent'),
+      expect: () => [
+        const ProjectsState(
+          projectsDirPath: defaultProjectDirPath,
+          projects: RequestStatus.succeeded([]),
+        ),
+      ],
+    );
+
+    blocTest<ProjectsCubit, ProjectsState>(
+      'resets search and returns all projects when search value is empty',
+      build: () => projectsCubit,
+      seed: () => ProjectsState(
+        projectsDirPath: defaultProjectDirPath,
+        projects: RequestStatus.succeeded([mockProjects[0]]),
+      ),
+      act: (cubit) => cubit.onSearch(''),
+      expect: () => [
+        ProjectsState(
+          projectsDirPath: defaultProjectDirPath,
+          projects: RequestStatus.succeeded(mockProjects),
+        ),
+      ],
+    );
+
+    blocTest<ProjectsCubit, ProjectsState>(
+      'filters by partial project name',
+      build: () => projectsCubit,
+      seed: () => ProjectsState(
+        projectsDirPath: defaultProjectDirPath,
+        projects: RequestStatus.succeeded([mockProjects[0]]),
+      ),
+      act: (cubit) => cubit.onSearch('Proj'),
+      expect: () => [
+        ProjectsState(
+          projectsDirPath: defaultProjectDirPath,
+          projects: RequestStatus.succeeded(mockProjects),
+        ),
+      ],
     );
   });
 }

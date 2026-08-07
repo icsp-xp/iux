@@ -5,6 +5,7 @@ import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iux/data/repositories/iux_settings_repository.dart';
 import 'package:iux/data/repositories/projects_repository.dart';
+import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
 import 'package:iux/domain/use_cases/get_folder_path_use_case.dart';
 import 'package:iux/ui/projects/cubit/projects_state.dart';
@@ -17,6 +18,7 @@ final class ProjectsCubit extends Cubit<ProjectsState>
   final GetFolderPathUseCase _getFolderPathUseCase;
 
   StreamSubscription? _projectsSubscription;
+  List<Project> _unfilteredProjects = [];
 
   ProjectsCubit({
     required this._projectsRepository,
@@ -43,10 +45,14 @@ final class ProjectsCubit extends Cubit<ProjectsState>
 
     _projectsSubscription = _projectsRepository
         .watchProjects(Directory(folderPath))
-        .listen(
-          (projects) =>
-              emit(state.copyWith(projects: RequestStatus.succeeded(projects))),
-        );
+        .listen((projects) {
+          // Safe to store the original reference: [onSearch] filters via
+          // [where().toList()], creating a separate list. If future
+          // operations might mutate or share this reference, consider
+          // copying with [...projects].  
+          _unfilteredProjects = projects;
+          emit(state.copyWith(projects: RequestStatus.succeeded(projects)));
+        });
   }
 
   Future<void> delete(final String projectDirPath) async {
@@ -62,6 +68,19 @@ final class ProjectsCubit extends Cubit<ProjectsState>
         _watchProjects(path);
       },
     );
+  }
+
+  void onSearch(final String value) {
+    if (value.isNotEmpty) {
+      final filtered = _unfilteredProjects
+          .where(
+            (p) => p.name.toLowerCase().contains(value.trim().toLowerCase()),
+          )
+          .toList();
+      emit(state.copyWith(projects: RequestSucceeded(filtered)));
+    } else {
+      emit(state.copyWith(projects: RequestSucceeded(_unfilteredProjects)));
+    }
   }
 
   @override
