@@ -8,7 +8,6 @@ import 'package:iux/ui/core/ui/confirm_dialog.dart';
 class ProjectView extends StatelessWidget {
   final String name;
   final String path;
-  // final VoidCallback onChangePath;
   final VoidCallback onDelete;
 
   const ProjectView({
@@ -37,16 +36,26 @@ class ProjectView extends StatelessWidget {
               children: [
                 Text(
                   name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: theme.typography.body.md.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  path,
-                  style: theme.typography.body.md.copyWith(
-                    color: theme.colors.border,
-                    fontStyle: FontStyle.italic,
-                  ),
+                Row(
+                  spacing: theme.spacing.sm,
+                  children: [
+                    Icon(FLucideIcons.folder, color: theme.colors.mutedForeground),
+                    Text(
+                      path,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.typography.body.md.copyWith(
+                        color: theme.colors.mutedForeground,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

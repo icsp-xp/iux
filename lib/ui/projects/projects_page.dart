@@ -100,6 +100,8 @@ class ProjectsView extends StatelessWidget {
               ],
             ),
 
+            Gap(theme.spacing.sm),
+            
             Row(
               spacing: theme.spacing.xs,
               children: [
