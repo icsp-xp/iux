@@ -7,6 +7,7 @@ import 'package:iux/core/extension/build_context_ext.dart';
 import 'package:iux/core/extension/failure_ext.dart';
 import 'package:iux/domain/model/project.dart';
 import 'package:iux/domain/request_status.dart';
+import 'package:iux/routing/router.dart';
 import 'package:iux/ui/core/theme/spacing.dart';
 import 'package:iux/ui/core/ui/gap.dart';
 import 'package:iux/ui/core/ui/show_toast.dart';
@@ -149,6 +150,9 @@ class ProjectsView extends StatelessWidget {
                             return ProjectView(
                               name: project.name,
                               path: project.dirPath,
+                              onOpenProject: () => context.pushRoute(
+                                WorkspaceRoute(projectPath: project.dirPath),
+                              ),
                               onDelete: () => context
                                   .read<ProjectsCubit>()
                                   .delete(project.dirPath),

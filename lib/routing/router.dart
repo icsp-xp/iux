@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iux/ui/projects/projects_page.dart';
+import 'package:iux/ui/workspace/workspace_page.dart';
 
 part 'router.gr.dart';
 

@@ -9,11 +9,13 @@ class ProjectView extends StatelessWidget {
   final String name;
   final String path;
   final VoidCallback onDelete;
+  final VoidCallback onOpenProject;
 
   const ProjectView({
     required this.name,
     required this.path,
     required this.onDelete,
+    required this.onOpenProject,
     super.key,
   });
 
@@ -21,11 +23,22 @@ class ProjectView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: theme.colors.card,
-        borderRadius: theme.style.borderRadius.sm,
+    return FTappable(
+      onPress: onOpenProject,
+      builder: (context, states, child) => FFocusedOutline(
+        focused: states.contains(FTappableVariant.focused),
+        child: Container(
+          padding: const .symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color:
+                (states.contains(FTappableVariant.hovered) ||
+                    states.contains(FTappableVariant.pressed))
+                ? theme.colors.secondary
+                : theme.colors.card,
+            borderRadius: theme.style.borderRadius.sm,
+          ),
+          child: child,
+        ),
       ),
       child: Row(
         spacing: theme.spacing.sm,
@@ -45,7 +58,10 @@ class ProjectView extends StatelessWidget {
                 Row(
                   spacing: theme.spacing.sm,
                   children: [
-                    Icon(FLucideIcons.folder, color: theme.colors.mutedForeground),
+                    Icon(
+                      FLucideIcons.folder,
+                      color: theme.colors.mutedForeground,
+                    ),
                     Text(
                       path,
                       maxLines: 1,
