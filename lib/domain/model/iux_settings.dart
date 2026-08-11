@@ -13,7 +13,7 @@ abstract class IuxSettings with _$IuxSettings {
   const factory IuxSettings({required String defaultProjectDirPath}) =
       _IuxSettings;
 
-  factory IuxSettings.fromJson(Map<String, dynamic> json) =>
+  factory IuxSettings.fromJson(Map<String, Object?> json) =>
       _$IuxSettingsFromJson(json);
 
   factory IuxSettings.fromJsonString(String json) =>

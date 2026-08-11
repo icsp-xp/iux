@@ -1,8 +1,15 @@
 import 'package:flutter/widgets.dart';
-import 'package:iux/ui/workspace/widgets/canvas_components/canvas_component_painter.dart';
+import 'package:iux/ui/workspace/widgets/canvas_components/canvas_component.dart';
 
-class BoxComponent extends CanvasComponentPainter {
-  BoxComponent({required super.position, required super.size});
+class BoxComponent extends CanvasComponent {
+  const BoxComponent({
+    required super.position,
+    required super.size,
+    super.rotation,
+  });
+  
+  BoxComponent.fromModifiedProperties(super.modifiedProperties)
+    : super.fromModifiedProperties();
 
   @override
   void paint(Canvas canvas, Size _) {
