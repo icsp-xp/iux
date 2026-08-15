@@ -12,7 +12,21 @@ Application design system built with Flutter using [ForUI](https://forui.dev) fo
 - [Project Structure](#project-structure)
 
 ## Getting Started
-This project uses [FVM](https://fvm.app/documentation/getting-started/installation) to handle the flutter version so before running any **Flutter** or **Dart** command, you should prefix it with **fvm** e.g.:
+This project requires [FVM](https://fvm.app/documentation/getting-started/installation) to manage its Flutter SDK version. Before running any Flutter or Dart command, make sure the required Flutter SDK version, specified in `.fvmrc`, is installed. You can check which Flutter SDK versions are currently installed with:
+```bash
+fvm list
+```
+If the required version is not installed, install it with:
+```bash
+fvm install <flutter-version>
+``` 
+After installing the required version, set it as the project's Flutter SDK with:
+```bash
+fvm use <flutter-version>
+```
+then restart your editor so that it detects the newly configured Flutter SDK.
+
+To run any Flutter or Dart command you should prefix it with `fvm`. For example:
 ```bash
 fvm flutter run
 ```
@@ -77,7 +91,7 @@ Generates a Freezed immutable data class with built-in equality, `copyWith`, and
 
 **Usage**
 ```bash
-fvm_mason make freezed_class -o <folder path>
+fvm_mason make freezed_class -o <folder-path>
 ```
 
 **Prompts**
