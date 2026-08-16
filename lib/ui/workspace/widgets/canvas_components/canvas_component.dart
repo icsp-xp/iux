@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:iux/core/extension/object_ext.dart';
 import 'package:iux/domain/model/component_definition/box_component_definition.dart';
 
 abstract class CanvasComponent extends CustomPainter {
@@ -16,12 +17,15 @@ abstract class CanvasComponent extends CustomPainter {
   CanvasComponent.fromModifiedProperties(
     Map<String, Object?> modifiedProperties,
   ) : position =
-          modifiedProperties[BoxComponentDefinition.position.name] as Offset? ??
+          modifiedProperties[BoxComponentDefinition.position.name]
+              ?.safeCast<Offset>() ??
           Offset.zero,
       rotation =
-          modifiedProperties[BoxComponentDefinition.rotation.name] as double? ??
+          modifiedProperties[BoxComponentDefinition.rotation.name]
+              ?.safeCast<double>() ??
           0,
       size =
-          modifiedProperties[BoxComponentDefinition.size.name] as Size? ??
+          modifiedProperties[BoxComponentDefinition.size.name]
+              ?.safeCast<Size>() ??
           const Size.square(64);
 }
